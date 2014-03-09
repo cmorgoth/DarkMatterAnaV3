@@ -1,5 +1,5 @@
-#ifndef DM_BaseV2_HH
-#define DM_BaseV2_HH 1
+#ifndef DM_BaseV3_HH
+#define DM_BaseV3_HH 1
 
 #include "TH1F.h"
 #include "TH2F.h"
@@ -17,9 +17,11 @@ public:
   
   TChain* T;
   TChain* effT;
-
-  static const int MR_Bins = 5;
-  static const int RSQ_Bins = 5;
+  
+  //static const int MR_Bins = 5;
+  //static const int RSQ_Bins = 5;
+  static const int MR_Bins = 4;
+  static const int RSQ_Bins = 4;
   
   //static const float Lumi = 19.6;//fb^{-1}
   static const float Lumi = 19.364;
@@ -49,12 +51,16 @@ public:
   virtual int pfJetPassCSVM(double*, int);
 
   virtual std::vector<TH2F*> Plot_2DRazor();
+  //virtual std::vector<TH2F*> Plot_2D_Kine();
   virtual std::vector<TH1F*> Plot_1DRazor();
   virtual std::vector<TH1F*> PlotMETmag();
-
+  virtual std::vector<TH1F*> PlotKine();
+  virtual std::vector<TH1F*> Plot_MRCat();//MR Categories
+  
   virtual bool PrintEvents();
   virtual bool SetStatus();
   virtual bool SetMetStatus();
+  virtual bool SetStatusKine();
   
   virtual bool SetBtagCut(int a, int b, int c){nBtagCut[0]=a; nBtagCut[1]=b; nBtagCut[2]=c;};
   virtual double HLTscale(double, double);

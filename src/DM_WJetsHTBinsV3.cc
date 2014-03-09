@@ -6,23 +6,23 @@ WJetsHTBins::WJetsHTBins(){
   
 };
 
-WJetsHTBins::WJetsHTBins(int MetIndex ): BaseDM( MetIndex, "WJetsHTBins" ){
+WJetsHTBins::WJetsHTBins(int MetIndex ): BaseDM( MetIndex, "W" ){
   
   T = new TChain("outTree");
   //T->Add("/media/data/cmorgoth/Data/DMData/Pt100Data/WJetsToLNu_PtW-100_sf.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_150_HT_200_pu_mu_LooseBtag_sf.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_200_HT_250_pu_mu_LooseBtag_sf.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_250_HT_300_pu_mu_LooseBtag_sf.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_300_HT_400_pu_mu_LooseBtag_sf.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_400_HT_Inf_pu_mu_LooseBtag_sf.root");
+  T->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_150_HT_200_pu_mu_LooseBtag_sf_ISR.root");
+  T->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_200_HT_250_pu_mu_LooseBtag_sf_ISR.root");
+  T->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_250_HT_300_pu_mu_LooseBtag_sf_ISR.root");
+  T->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_300_HT_400_pu_mu_LooseBtag_sf_ISR.root");
+  T->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_400_HT_Inf_pu_mu_LooseBtag_sf_ISR.root");
   
   effT = new TChain("effTree");
   //effT->Add("/media/data/cmorgoth/Data/DMData/Pt100Data/WJetsToLNu_PtW-100_sf.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_150_HT_200_pu_mu_LooseBtag_sf.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_200_HT_250_pu_mu_LooseBtag_sf.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_250_HT_300_pu_mu_LooseBtag_sf.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_300_HT_400_pu_mu_LooseBtag_sf.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_400_HT_Inf_pu_mu_LooseBtag_sf.root");
+  effT->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_150_HT_200_pu_mu_LooseBtag_sf_ISR.root");
+  effT->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_200_HT_250_pu_mu_LooseBtag_sf_ISR.root");
+  effT->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_250_HT_300_pu_mu_LooseBtag_sf_ISR.root");
+  effT->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_300_HT_400_pu_mu_LooseBtag_sf_ISR.root");
+  effT->Add("/media/data/cmorgoth/Data/DMData/WJets/BtagCorrMC/WJetsToLNu_400_HT_Inf_pu_mu_LooseBtag_sf_ISR.root");
   
 };
 

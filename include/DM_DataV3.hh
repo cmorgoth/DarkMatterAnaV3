@@ -12,7 +12,9 @@
 class Data: public BaseDM{
   
 public:
-   
+  
+  //static const int btagIndex = 0;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight >=1
+  
   Data();
   Data(const char* FileName, int MetIndex);
   //Data(char const*, int );
@@ -35,9 +37,12 @@ public:
   std::vector<TH2F*> Plot_2DRazor();
   std::vector<TH1F*> Plot_1DRazor();
   std::vector<TH1F*> PlotMETmag();
-  
+  std::vector<TH1F*> PlotKine();
+  std::vector<TH1F*> Plot_MRCat();//MR Categories
+
   bool PrintEvents();
   bool SetStatus();
+  bool SetStatusKine();
   bool SetMetStatus();
     
 };

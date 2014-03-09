@@ -1,3 +1,6 @@
+*.o
+*.cc~
+*.hh~
 *.acn
 *.acr
 *.alg

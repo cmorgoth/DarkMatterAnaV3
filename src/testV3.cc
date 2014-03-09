@@ -19,9 +19,11 @@
 using namespace std;
 
 //5x5 v2
-const float BaseDM::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.1, 2.50};                       
-const float BaseDM::MR_BinArr[] = {200., 300., 400., 600., 900., 3500.}; 
-
+//const float BaseDM::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 1.1, 2.50};                       
+//const float BaseDM::MR_BinArr[] = {200., 300., 400., 600., 900., 3500.}; 
+//4x4
+const float BaseDM::RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 2.50};
+const float BaseDM::MR_BinArr[] = {200., 300., 400., 600., 3500.};
 
 int main(){
   

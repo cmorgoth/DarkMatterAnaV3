@@ -1,4 +1,5 @@
 #include "DM_1DRatioV3.hh"
+#include "TMath.h"
 
 int RatioPlots(TH1F* h1, TH1F* h2, TString h1Name = "h1Name", TString h2Name = "h2Name", TString fname = "default_name", TString type = "defaultType"){
 	
@@ -168,7 +169,7 @@ int RatioPlotsV2(THStack* s, TH1F* h2, TH1F* h1, TString h1Name = "h1Name", TStr
     RATIO->GetYaxis()->SetRangeUser(.0, 2.0);
     s->SetMaximum(100000.);
   }else if(type == "MET"){
-    RATIO = new TH1F("RATIO", fname + "_" + type , 50, 0, 1000);
+    RATIO = new TH1F("RATIO", fname + "_" + type , 20, 0, 1000);
     label = "#slash{E}_{T}  GeV";
     s->SetMaximum(10000.);
   }else if(type == "NJETS"){
@@ -176,20 +177,45 @@ int RatioPlotsV2(THStack* s, TH1F* h2, TH1F* h1, TString h1Name = "h1Name", TStr
     label = "Jet Multiplicity";
     s->SetMaximum(100000.);
   }else if(type=="Mass"){
-    RATIO = new TH1F("RATIO", fname + "_" + type , 15, .0, 500);
-    label = "Inv Mass";
+    RATIO = new TH1F("RATIO", fname + "_" + type , 10, 70.0, 110.0);
+    label = "M_{#mu#mu}";
+    s->SetMaximum(1e4);
   }else if(type=="Angle"){
     std::cout << "========ANgle=======" << std::endl;
     RATIO = new TH1F("RATIO", fname + "_" + type , 15, .0, 2*3.1416);
     label = "#Delta#theta";
-  }else if(type=="PT"){
-    RATIO = new TH1F("RATIO", fname + "_" + type , 15, .0, 500);
-    label = "P_{T}";
-  }else if(type=="eta"){
+  }else if(type=="PT_J"){
+    std::cout << "========PT_J=======" << std::endl;
+    RATIO = new TH1F("RATIO", fname + "_" + type , 20, 80, 1000);
+    label = "P^{J}_{T}";
+    s->SetMaximum(3e4);
+  }else if(type=="Eta_J"){
     std::cout << "========eta=======" << std::endl;
-    RATIO = new TH1F("RATIO", fname + "_" + type , 15, -3.0, 3.0);
+    RATIO = new TH1F("RATIO", fname + "_" + type , 20, -3.0, 3.0);
     label = "#eta";
     std::cout << "========eta1=======" << std::endl;
+    s->SetMaximum(5e4);
+  }else if(type=="Phi_J"){
+    std::cout << "========Phi=======" << std::endl;
+    RATIO = new TH1F("RATIO", fname + "_" + type , 20, -TMath::Pi(), TMath::Pi());
+    label = "#phi";
+    s->SetMaximum(5e4);
+  }else if(type=="PT_mu"){
+    std::cout << "========PT_mu=======" << std::endl;
+    RATIO = new TH1F("RATIO", fname + "_" + type , 20, 0, 1000);
+    label = "P^{#mu}_{T}";
+    s->SetMaximum(3e4);
+  }else if(type=="Eta_mu"){
+    std::cout << "========eta_mu=======" << std::endl;
+    RATIO = new TH1F("RATIO", fname + "_" + type , 20, -3.0, 3.0);
+    label = "#eta_{#mu}";
+    std::cout << "========eta1=======" << std::endl;
+    s->SetMaximum(5e4);
+  }else if(type=="Phi_mu"){
+    std::cout << "========Phi_mu=======" << std::endl;
+    RATIO = new TH1F("RATIO", fname + "_" + type , 20, -TMath::Pi(), TMath::Pi());
+    label = "#phi_{#mu}";
+    s->SetMaximum(5e4);
   }else{
     delete RATIO;
     delete C;
@@ -239,46 +265,52 @@ int RatioPlotsV2(THStack* s, TH1F* h2, TH1F* h1, TString h1Name = "h1Name", TStr
   pad1->SetLogy();
   C->Update();
   TLatex *t;
+  TString n1 = "CMS Preliminary";
+  TString n2 = "#sqrt{s} = 8 TeV";
+  //TString n3 = "#int L dt = 19.6 fb^{-1}";
+  //TString n3 = "#int L dt = 5.3 fb^{-1}";
+  TString n3 = "#int L dt = 18.4 fb^{-1}";
+
   if(type=="Mass"){
     t = new TLatex();
     t->SetNDC();
     t->SetTextAlign(22);
     t->SetTextSize(0.03);
-    t->DrawLatex(0.45,0.87,"CMS Preliminary");
-    t->DrawLatex(0.45,0.83,"#sqrt{s} = 8 TeV");
-    t->DrawLatex(0.45,0.77,"#int L dt = 19.6 fb^{-1}");
+    t->DrawLatex(0.45,0.87, n1);
+    t->DrawLatex(0.45,0.83, n2);
+    t->DrawLatex(0.45,0.77, n3);
   }else if(type == "Angle"){
     TLatex *t = new TLatex();
     t->SetNDC();
     t->SetTextAlign(22);
     t->SetTextSize(0.03);
-    t->DrawLatex(0.45,0.87,"CMS Preliminary");
-    t->DrawLatex(0.45,0.83,"#sqrt{s} = 8 TeV");
-    t->DrawLatex(0.45,0.77,"#int L dt = 19.6 fb^{-1}");
-  }else if(type=="PT"){
+    t->DrawLatex(0.45,0.87, n1);
+    t->DrawLatex(0.45,0.83, n2);
+    t->DrawLatex(0.45,0.77, n3);
+  }else if(type=="PT_J"){
     TLatex *t = new TLatex();
     t->SetNDC();
     t->SetTextAlign(22);
     t->SetTextSize(0.03);
-    t->DrawLatex(0.45,0.87,"CMS Preliminary");
-    t->DrawLatex(0.45,0.83,"#sqrt{s} = 8 TeV");
-    t->DrawLatex(0.45,0.77,"#int L dt = 19.6 fb^{-1}");
-  }else if(type=="eta"){
+    t->DrawLatex(0.45,0.87, n1);
+    t->DrawLatex(0.45,0.83, n2);
+    t->DrawLatex(0.45,0.77, n3);
+  }else if(type=="Eta_J"){
     TLatex *t = new TLatex();
     t->SetNDC();
     t->SetTextAlign(22);
     t->SetTextSize(0.03);
-    t->DrawLatex(0.45,0.87,"CMS Preliminary");
-    t->DrawLatex(0.45,0.83,"#sqrt{s} = 8 TeV");
-    t->DrawLatex(0.45,0.77,"#int L dt = 19.6 fb^{-1}");
+    t->DrawLatex(0.45,0.87, n1);
+    t->DrawLatex(0.45,0.83, n2);
+    t->DrawLatex(0.45,0.77, n3);
   }else{
     TLatex *t = new TLatex();
     t->SetNDC();
     t->SetTextAlign(22);
     t->SetTextSize(0.03);
-    t->DrawLatex(0.5,0.87,"CMS Preliminary");
-    t->DrawLatex(0.5,0.83,"#sqrt{s} = 8 TeV");
-    t->DrawLatex(0.5,0.77,"#int L dt = 19.6 fb^{-1}");    
+    t->DrawLatex(0.5,0.87, n1);
+    t->DrawLatex(0.5,0.83, n2);
+    t->DrawLatex(0.5,0.77, n3);    
   }
   
   TPad *pad2 = new TPad("pad2","pad2",0,0.0,1,0.25);

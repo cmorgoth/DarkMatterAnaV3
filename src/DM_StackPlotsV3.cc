@@ -4,8 +4,8 @@
 void CreateStackPlots(){
   
   int bL, bM, bT;
-  bL = bM = 1;
-  bT = 1;
+  bL = bM = 0;
+  bT = 0;
 
   WJetsHTBins* W = new WJetsHTBins( 2 );
   ///////////////////////////////////////////

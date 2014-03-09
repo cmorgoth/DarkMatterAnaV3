@@ -12,10 +12,14 @@ BaseDM::BaseDM(int metIndex, TString pName){
   this->pName = pName;
   
   if(pName != "Data"){
-    TFile* file = new TFile("/media/data/cmorgoth/TriggerDM/hlt_eff_DoubleMuonPD_Final.root");
+    //TFile* file = new TFile("/media/data/cmorgoth/TriggerDM/hlt_eff_DoubleMuonPD_Final.root");//Original Trigger
+    TFile* file = new TFile("/media/data/cmorgoth/git/TriggerTurnOn_DMAnalysis/HTMHT_TurnOn/hlt_eff_HTMHT_12mu_BOX_0bTag_Final.root");
+    //TFile* file = new TFile("/media/data/cmorgoth/git/TriggerTurnOn_DMAnalysis/HTMHT_TurnOn/hlt_eff_HTMHT_12mu_BOX_1bTagTight_Final.root");
     eff = (TEfficiency*)file->Get("Eff2d");
     
-    TFile* file1 = new TFile("/media/data/cmorgoth/TriggerDM/hlt_eff_SignleElePD_Final.root");
+    //TFile* file1 = new TFile("/media/data/cmorgoth/TriggerDM/hlt_eff_SignleElePD_Final.root");//Original Trigger
+    TFile* file1 = new TFile("/media/data/cmorgoth/git/TriggerTurnOn_DMAnalysis/HTMHT_TurnOn/hlt_eff_HTMHT_0mu_BOX_0bTag_Final.root");
+    //TFile* file1 = new TFile("/media/data/cmorgoth/git/TriggerTurnOn_DMAnalysis/HTMHT_TurnOn/hlt_eff_HTMHT_0mu_BOX_1bTagTight_Final.root");
     eff_ele = (TEfficiency*)file->Get("Eff2d");
   }else{
     std::cout << "======== IS DATA!==========" << std::endl;
@@ -24,7 +28,7 @@ BaseDM::BaseDM(int metIndex, TString pName){
   ////////// Including Btag capability///////////////////////////                               
   ///////////////////////////////////////////////////////////////
   
-  
+  std::cout << "====Btag Index====> " << btagIndex << std::endl;
   if( btagIndex == 0 || btagIndex == 1 ){
     this->BtagBranch = "nBtag";
   }else{
@@ -104,13 +108,13 @@ bool BaseDM::PrintEvents(){
       if( BOX == 2 )Nt_2muBox += sf_w;
       
       if( nBtag == 0 ){
-	
-	Nt_MR_RSQ_cut0BTag += sf_w;
-	
-	if( BOX == 0 )Nt_0muBox0BTag += sf_w;
-	if( BOX == 1 )Nt_1muBox0BTag += sf_w;
-	if( BOX == 2 )Nt_2muBox0BTag += sf_w;
-	
+        
+        Nt_MR_RSQ_cut0BTag += sf_w;
+        
+        if( BOX == 0 )Nt_0muBox0BTag += sf_w;
+        if( BOX == 1 )Nt_1muBox0BTag += sf_w;
+        if( BOX == 2 )Nt_2muBox0BTag += sf_w;
+        
       }
       
     }
@@ -370,8 +374,9 @@ TH2F BaseDM::PlotRSQ_vs_MR_1Box(){
 
 std::vector<TH1F*> BaseDM::PlotMETmag(){
   double metX[4], metcorrX[4], metY[4], metcorrY[4], ht, RSQ[4], MR[4], run/*, ls, evNum*/;
-  double mht[3], CSV[30], pu_w, mu_w, sf_w;
+  double mht[3], CSV[30], pu_w, mu_w, sf_w, ISR_w;
   int BOX, nBtag[2], N_Jets;
+  double Mu_Px[2], Mu_Py[2], Mu_Pz[2], Mu_E[2];
   double pTHem1, pTHem2, etaHem1, etaHem2, phiHem1, phiHem2;
  
   std::vector< TH1F* > metvec;
@@ -380,7 +385,7 @@ std::vector<TH1F*> BaseDM::PlotMETmag(){
   for(int l = 0; l < 3; l++ ){
     for( int m = 0; m < 3; m++ ){
       name = TString(Form("BaseDM_METmag_Box%d_plotType%d",l,m));
-      MET[3*l + m] = new TH1F( name, name, 50, 0, 1000 );
+      MET[3*l + m] = new TH1F( name, name, 20, 0, 1000 );
     }
   }
   
@@ -394,8 +399,8 @@ std::vector<TH1F*> BaseDM::PlotMETmag(){
   T->SetBranchAddress("RSQ", RSQ);
   T->SetBranchAddress("MR", MR);
   T->SetBranchAddress("BOX_NUM", &BOX);
-  T->SetBranchAddress("nBtag", &nBtag[0]);
-  //T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
+  //T->SetBranchAddress("nBtag", &nBtag[0]);
+  T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
@@ -406,19 +411,25 @@ std::vector<TH1F*> BaseDM::PlotMETmag(){
   T->SetBranchAddress("metY", metY);
   T->SetBranchAddress("metCorrY", metcorrY);
   T->SetBranchAddress("N_Jets", &N_Jets);
-  
   T->SetBranchAddress("pTHem1", &pTHem1);
   T->SetBranchAddress("pTHem2", &pTHem2);
   T->SetBranchAddress("etaHem1", &etaHem1);
   T->SetBranchAddress("etaHem2", &etaHem2);
   T->SetBranchAddress("phiHem1", &phiHem1);
   T->SetBranchAddress("phiHem2", &phiHem2);
+  T->SetBranchAddress("Mu_Px", Mu_Px);
+  T->SetBranchAddress("Mu_Py", Mu_Py);
+  T->SetBranchAddress("Mu_Pz", Mu_Pz);
+  T->SetBranchAddress("Mu_E", Mu_E);
   T->SetBranchAddress("sf_w", &sf_w);
-  
+  T->SetBranchAddress("ISR_w", &ISR_w);
+
   float metmag = .0;
   float metmagcorr = .0;
   double wt = 1.;
-  double e_sf = 0.2719076637;
+  //double e_sf = 0.2719076637;//5.3 fb-1
+  double e_sf = 0.95461139896;//18.42 fb-1
+  
   for(int i = 0; i < T->GetEntries(); i++){
     T->GetEntry(i);
     fBtag[0] = (nBtag[0] == 0);
@@ -429,7 +440,8 @@ std::vector<TH1F*> BaseDM::PlotMETmag(){
     fBtag[4] = (nBtag[1] >= nBtagCut[2]);
     
     TLorentzVector j1;
-    TLorentzVector j2;
+    TLorentzVector j2, double_mu;
+
     j1.SetPtEtaPhiE(pTHem1, etaHem1, phiHem1, pTHem1*cosh(etaHem1));//Hemisphere
     j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere
     double Dphi = j1.DeltaPhi(j2);
@@ -438,26 +450,31 @@ std::vector<TH1F*> BaseDM::PlotMETmag(){
     metmagcorr = sqrt(metcorrX[metIndex]*metcorrX[metIndex]+metcorrY[metIndex]*metcorrY[metIndex]);
     if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex]  && fabs(Dphi) < 2.5){
       if( BOX == 0 ){
-	wt = HLTscaleEle(MR[metIndex], RSQ[metIndex]);
-	if( wt == 0.0)wt = 1.0;
-	MET[0]->Fill(metmag, sf_w*wt*pu_w*mu_w*e_sf);
-	MET[1]->Fill(metmagcorr, sf_w*wt*pu_w*mu_w*e_sf);
-	MET[2]->Fill(metmagcorr-metmag, sf_w*wt*pu_w*mu_w*e_sf);
-	MET[9]->Fill(N_Jets,sf_w*wt*pu_w*mu_w*e_sf);
+        wt = HLTscaleEle(MR[metIndex], RSQ[metIndex]);
+        if( wt == 0.0)wt = 1.0;
+        MET[0]->Fill(metmag, sf_w*wt*pu_w*mu_w*e_sf*ISR_w);
+        MET[1]->Fill(metmagcorr, sf_w*wt*pu_w*mu_w*e_sf*ISR_w);
+        MET[2]->Fill(metmagcorr-metmag, sf_w*wt*pu_w*mu_w*e_sf*ISR_w);
+        MET[9]->Fill(N_Jets,sf_w*wt*pu_w*mu_w*e_sf*ISR_w);
       }else if( BOX == 1 ){
-	wt = HLTscale(MR[metIndex], RSQ[metIndex]);
-	if( wt == 0.0)wt = 1.0;
-	MET[3]->Fill(metmag, sf_w*wt*pu_w*mu_w*e_sf);
-	MET[4]->Fill(metmagcorr, sf_w*wt*pu_w*mu_w*e_sf);
-	MET[5]->Fill(metmagcorr-metmag, sf_w*wt*pu_w*mu_w*e_sf);
-	MET[10]->Fill(N_Jets, sf_w*wt*pu_w*mu_w*e_sf);
+        wt = HLTscale(MR[metIndex], RSQ[metIndex]);
+        if( wt == 0.0)wt = 1.0;
+        MET[3]->Fill(metmag, sf_w*wt*pu_w*mu_w*e_sf*ISR_w);
+        MET[4]->Fill(metmagcorr, sf_w*wt*pu_w*mu_w*e_sf*ISR_w);
+        MET[5]->Fill(metmagcorr-metmag, sf_w*wt*pu_w*mu_w*e_sf*ISR_w);
+        MET[10]->Fill(N_Jets, sf_w*wt*pu_w*mu_w*e_sf*ISR_w);
       }else if( BOX == 2 ){
-	wt = HLTscale(MR[metIndex], RSQ[metIndex]);
-	if( wt == 0.0)wt = 1.0;
-	MET[6]->Fill(metmag, sf_w*wt*pu_w*mu_w*e_sf);
-	MET[7]->Fill(metmagcorr, sf_w*wt*pu_w*mu_w*e_sf);
-	MET[8]->Fill(metmagcorr-metmag, sf_w*wt*pu_w*mu_w*e_sf);
-	MET[11]->Fill(N_Jets, sf_w*wt*pu_w*mu_w*e_sf);
+	double_mu.SetPxPyPzE(Mu_Px[0]+Mu_Px[1], Mu_Py[0]+Mu_Py[1], Mu_Pz[0]+Mu_Pz[1], Mu_E[0]+Mu_E[1]);
+	
+	if(double_mu.M() > 75.0 && double_mu.M() < 110.0){
+	  wt = HLTscale(MR[metIndex], RSQ[metIndex]);
+	  if( wt == 0.0)wt = 1.0;
+	  MET[6]->Fill(metmag, sf_w*wt*pu_w*mu_w*e_sf*ISR_w);
+	  MET[7]->Fill(metmagcorr, sf_w*wt*pu_w*mu_w*e_sf*ISR_w);
+	  MET[8]->Fill(metmagcorr-metmag, sf_w*wt*pu_w*mu_w*e_sf*ISR_w);
+	  MET[11]->Fill(N_Jets, sf_w*wt*pu_w*mu_w*e_sf*ISR_w);
+	}
+	
       }
     }
   }
@@ -472,7 +489,8 @@ std::vector<TH1F*> BaseDM::PlotMETmag(){
 
 std::vector<TH2F*> BaseDM::Plot_2DRazor(){
   double RSQ[4], MR[4], CSV[30];
-  double pTHem1, pTHem2, etaHem1, etaHem2, phiHem1, phiHem2, pu_w, mu_w, sf_w;
+  double pTHem1, pTHem2, etaHem1, etaHem2, phiHem1, phiHem2, pu_w, mu_w, sf_w, ISR_w;
+  double Mu_Px[2], Mu_Py[2], Mu_Pz[2], Mu_E[2];
   int BOX, N_Jets, nBtag[2];
   
   std::vector< TH2F* > Razor2DVec;
@@ -492,8 +510,8 @@ std::vector<TH2F*> BaseDM::Plot_2DRazor(){
   T->SetBranchAddress("RSQ", RSQ);
   T->SetBranchAddress("MR", MR);
   T->SetBranchAddress("BOX_NUM", &BOX);
-  T->SetBranchAddress("nBtag", &nBtag[0]);
-  //T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
+  //T->SetBranchAddress("nBtag", &nBtag[0]);
+  T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
@@ -503,13 +521,19 @@ std::vector<TH2F*> BaseDM::Plot_2DRazor(){
   T->SetBranchAddress("etaHem2", &etaHem2);
   T->SetBranchAddress("phiHem1", &phiHem1);
   T->SetBranchAddress("phiHem2", &phiHem2);
+  T->SetBranchAddress("Mu_Px", Mu_Px);
+  T->SetBranchAddress("Mu_Py", Mu_Py);
+  T->SetBranchAddress("Mu_Pz", Mu_Pz);
+  T->SetBranchAddress("Mu_E", Mu_E);
   T->SetBranchAddress("sf_w", &sf_w);
+  T->SetBranchAddress("ISR_w", &ISR_w);
 
-  double e_sf = 0.2719076637;
+  //double e_sf = 0.2719076637;
+  double e_sf = 0.95461139896;//18.42 fb-1
   for(int i = 0; i < T->GetEntries(); i++){
     T->GetEntry(i);
     TLorentzVector j1;
-    TLorentzVector j2;
+    TLorentzVector j2, double_mu;
     
     j1.SetPtEtaPhiE(pTHem1, etaHem1, phiHem1, pTHem1*cosh(etaHem1));//Hemisphere
     j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere
@@ -526,15 +550,20 @@ std::vector<TH2F*> BaseDM::Plot_2DRazor(){
       if( BOX == 0){
         hltWeight = HLTscaleEle( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor2D[0]->Fill(MR[metIndex], RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
+        Razor2D[0]->Fill(MR[metIndex], RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
       }else if( BOX == 1 ){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-	Razor2D[1]->Fill(MR[metIndex], RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
+        Razor2D[1]->Fill(MR[metIndex], RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
       }else if( BOX == 2 ){
-        hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
-        if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor2D[2]->Fill(MR[metIndex], RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
+	double_mu.SetPxPyPzE(Mu_Px[0]+Mu_Px[1], Mu_Py[0]+Mu_Py[1], Mu_Pz[0]+Mu_Pz[1], Mu_E[0]+Mu_E[1]);
+	
+	if(double_mu.M() > 75.0 && double_mu.M() < 110.0){
+	  hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
+	  if( hltWeight == 0.0 )hltWeight = 1.0;
+	  Razor2D[2]->Fill(MR[metIndex], RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	}
+	
       }
     }
   }
@@ -561,7 +590,9 @@ int BaseDM::pfJetPassCSVM(double* CSVM, int N_Jets){
 
 std::vector<TH1F*> BaseDM::Plot_1DRazor(){
   double RSQ[4], MR[4], CSV[30];
-  double pTHem1, pTHem2, etaHem1, etaHem2, phiHem1, phiHem2, pu_w, mu_w, sf_w;
+  double pTHem1, pTHem2, etaHem1, etaHem2, phiHem1, phiHem2, pu_w, mu_w, sf_w, ISR_w;
+  double Mu_Px[2], Mu_Py[2], Mu_Pz[2], Mu_E[2];
+  
   int BOX, N_Jets, nBtag[2];
   
   std::vector< TH1F* > Razor1DVec;
@@ -569,8 +600,8 @@ std::vector<TH1F*> BaseDM::Plot_1DRazor(){
   TString name, name1;
   double hltWeight;
   for(int l = 0; l < 6; l++){
-    name = TString(Form("MR_1D_Data_%dmu_Box",l));
-    name1 = TString(Form("R2_1D_Data_%dmu_Box",l));
+    name = TString(Form("MR_1D_%dmu_Box",l));
+    name1 = TString(Form("R2_1D_%dmu_Box",l));
     Razor1D[2*l] = new TH1F(name,name, MR_Bins, MR_BinArr);
     Razor1D[2*l+1] = new TH1F(name1,name1, RSQ_Bins, RSQ_BinArr);
     if(l < 3){
@@ -585,8 +616,8 @@ std::vector<TH1F*> BaseDM::Plot_1DRazor(){
   T->SetBranchAddress("RSQ", RSQ);
   T->SetBranchAddress("MR", MR);
   T->SetBranchAddress("BOX_NUM", &BOX);
-  T->SetBranchAddress("nBtag", &nBtag[0]);
-  //T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
+  //T->SetBranchAddress("nBtag", &nBtag[0]);
+  T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
@@ -596,14 +627,20 @@ std::vector<TH1F*> BaseDM::Plot_1DRazor(){
   T->SetBranchAddress("etaHem2", &etaHem2);
   T->SetBranchAddress("phiHem1", &phiHem1);
   T->SetBranchAddress("phiHem2", &phiHem2);
+  T->SetBranchAddress("Mu_Px", Mu_Px);
+  T->SetBranchAddress("Mu_Py", Mu_Py);
+  T->SetBranchAddress("Mu_Pz", Mu_Pz);
+  T->SetBranchAddress("Mu_E", Mu_E);
   T->SetBranchAddress("sf_w", &sf_w);
-
-  double e_sf = 0.2719076637;
+  T->SetBranchAddress("ISR_w", &ISR_w);
+  
+  //double e_sf = 0.2719076637;
+  double e_sf = 0.95461139896;//18.42 fb-1
   for(int i = 0; i < T->GetEntries(); i++){
     T->GetEntry(i);
-    TLorentzVector j1;
+    TLorentzVector j1, double_mu;
     TLorentzVector j2;
-
+    
     j1.SetPtEtaPhiE(pTHem1, etaHem1, phiHem1, pTHem1*cosh(etaHem1));//Hemisphere   
     j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere
     
@@ -619,24 +656,29 @@ std::vector<TH1F*> BaseDM::Plot_1DRazor(){
       if(BOX == 0){
         hltWeight = HLTscaleEle( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-	Razor1D[0]->Fill(MR[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
-        Razor1D[1]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
-        Razor1D[6]->Fill(MR[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
-        Razor1D[7]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
+        Razor1D[0]->Fill(MR[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1D[1]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1D[6]->Fill(MR[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1D[7]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
       }else if(BOX == 1){
-	hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
+        hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor1D[2]->Fill(MR[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
-        Razor1D[3]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
-        Razor1D[8]->Fill(MR[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
-        Razor1D[9]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
+        Razor1D[2]->Fill(MR[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1D[3]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1D[8]->Fill(MR[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1D[9]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
       }else if(BOX == 2){
-	hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
-        if( hltWeight == 0.0 )hltWeight = 1.0;
-        Razor1D[4]->Fill(MR[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
-        Razor1D[5]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
-        Razor1D[10]->Fill(MR[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
-        Razor1D[11]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf);
+	double_mu.SetPxPyPzE(Mu_Px[0]+Mu_Px[1], Mu_Py[0]+Mu_Py[1], Mu_Pz[0]+Mu_Pz[1], Mu_E[0]+Mu_E[1]);
+	//std::cout << "-----" << double_mu.M() << std::endl;
+	if(double_mu.M() > 75.0 && double_mu.M() < 110.0){	
+	  hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
+	  if( hltWeight == 0.0 )hltWeight = 1.0;
+	  Razor1D[4]->Fill(MR[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1D[5]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1D[10]->Fill(MR[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1D[11]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	}
+	
       }
     }
 
@@ -647,10 +689,356 @@ std::vector<TH1F*> BaseDM::Plot_1DRazor(){
   }
 
   return Razor1DVec;
-
   
 };
 
+
+std::vector<TH1F*> BaseDM::Plot_MRCat(){
+ double RSQ[4], MR[4], CSV[30];
+  double pTHem1, pTHem2, etaHem1, etaHem2, phiHem1, phiHem2, pu_w, mu_w, sf_w, ISR_w;
+  double Mu_Px[2], Mu_Py[2], Mu_Pz[2], Mu_E[2];
+  
+  int BOX, N_Jets, nBtag[2];
+  int c1_bins = 11;
+  float c1B[] = {0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.9, 0.95, 1.0, 2.5};
+  int c2_bins = 6;
+  float c2B[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 2.5};
+  int c3_bins = 6;
+  float c3B[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 2.5};
+  int c4_bins = 4;
+  float c4B[] = {0.50, 0.60, 0.70, .950, 2.50};
+    
+  std::vector< TH1F* > Razor1DVec;
+  TH1F* Razor1D[12];
+  TString name1, name2, name3, name4;
+  double hltWeight;
+  for(int l = 0; l < 3; l++){
+    name1 = TString(Form(this->pName+"_cat1_1D_%dmu_Box",l));
+    name2 = TString(Form(this->pName+"_cat2_1D_%dmu_Box",l));
+    name3 = TString(Form(this->pName+"_cat3_1D_%dmu_Box",l));
+    name4 = TString(Form(this->pName+"_cat4_1D_%dmu_Box",l));
+    Razor1D[4*l] = new TH1F(name1,name1, c1_bins, c1B);
+    Razor1D[4*l+1] = new TH1F(name2,name2, c2_bins, c2B);
+    Razor1D[4*l+2] = new TH1F(name3,name3, c3_bins, c3B);
+    Razor1D[4*l+3] = new TH1F(name4,name4, c4_bins, c4B);
+    
+    if(l < 3){
+      Razor1D[4*l]->Sumw2();
+      Razor1D[4*l+1]->Sumw2();
+      Razor1D[4*l+2]->Sumw2();
+      Razor1D[4*l+3]->Sumw2();
+    }
+  }
+
+  SetStatus();
+  T->SetBranchAddress("pu_w", &pu_w);
+  T->SetBranchAddress("mu_w", &mu_w);
+  T->SetBranchAddress("RSQ", RSQ);
+  T->SetBranchAddress("MR", MR);
+  T->SetBranchAddress("BOX_NUM", &BOX);
+  //T->SetBranchAddress("nBtag", &nBtag[0]);
+  T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
+  T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  T->SetBranchAddress("N_Jets", &N_Jets);
+  T->SetBranchAddress("CSV", CSV);
+  T->SetBranchAddress("pTHem1", &pTHem1);
+  T->SetBranchAddress("pTHem2", &pTHem2);
+  T->SetBranchAddress("etaHem1", &etaHem1);
+  T->SetBranchAddress("etaHem2", &etaHem2);
+  T->SetBranchAddress("phiHem1", &phiHem1);
+  T->SetBranchAddress("phiHem2", &phiHem2);
+  T->SetBranchAddress("Mu_Px", Mu_Px);
+  T->SetBranchAddress("Mu_Py", Mu_Py);
+  T->SetBranchAddress("Mu_Pz", Mu_Pz);
+  T->SetBranchAddress("Mu_E", Mu_E);
+  T->SetBranchAddress("sf_w", &sf_w);
+  T->SetBranchAddress("ISR_w", &ISR_w);
+  
+  //double e_sf = 0.2719076637;
+  double e_sf = 0.95461139896;//18.42 fb-1
+  for(int i = 0; i < T->GetEntries(); i++){
+    T->GetEntry(i);
+    TLorentzVector j1, double_mu;
+    TLorentzVector j2;
+    
+    j1.SetPtEtaPhiE(pTHem1, etaHem1, phiHem1, pTHem1*cosh(etaHem1));//Hemisphere   
+    j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere
+    
+    double Dphi = j1.DeltaPhi(j2);
+    fBtag[0] = (nBtag[0] == 0);
+    fBtag[1] = fBtag[2] = (nBtag[0] >= nBtagCut[0]);
+    fBtag[3] = (nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
+    int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
+    //fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1]);
+    fBtag[4] = (nBtag[1] >= nBtagCut[2]);
+    
+    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && fabs(Dphi) < 2.5){
+      if(BOX == 0){
+        hltWeight = HLTscaleEle( MR[metIndex], RSQ[metIndex]);
+        if( hltWeight == 0.0 )hltWeight = 1.0;
+	if(MR[metIndex] > 200.0 && MR[metIndex] <= 300.0 ){
+	  Razor1D[0]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	}else if(MR[metIndex] > 300.0 && MR[metIndex] <= 400.0){
+	  Razor1D[1]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	}else if(MR[metIndex] > 400.0 && MR[metIndex] <= 600.0){
+	  Razor1D[2]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	}else if(MR[metIndex] > 600.0 && MR[metIndex] <= 3500.0){
+	  Razor1D[3]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	}
+      }else if(BOX == 1){
+        hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
+        if( hltWeight == 0.0 )hltWeight = 1.0;
+	if(MR[metIndex] > 200.0 && MR[metIndex] <= 300.0 ){
+	  Razor1D[4]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	}else if(MR[metIndex] > 300.0 && MR[metIndex] <= 400.0){
+	  Razor1D[5]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	}else if(MR[metIndex] > 400.0 && MR[metIndex] <= 600.0){
+	  Razor1D[6]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	}else if(MR[metIndex] > 600.0 && MR[metIndex] <= 3500.0){
+	  Razor1D[7]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	}
+      }else if(BOX == 2){
+	double_mu.SetPxPyPzE(Mu_Px[0]+Mu_Px[1], Mu_Py[0]+Mu_Py[1], Mu_Pz[0]+Mu_Pz[1], Mu_E[0]+Mu_E[1]);
+	//std::cout << "-----" << double_mu.M() << std::endl;
+	if(double_mu.M() > 75.0 && double_mu.M() < 110.0){	
+	  hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
+	  if( hltWeight == 0.0 )hltWeight = 1.0;
+	  if(MR[metIndex] > 200.0 && MR[metIndex] <= 300.0 ){
+	    Razor1D[8]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  }else if(MR[metIndex] > 300.0 && MR[metIndex] <= 400.0){
+	    Razor1D[9]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  }else if(MR[metIndex] > 400.0 && MR[metIndex] <= 600.0){
+	    Razor1D[10]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  }else if(MR[metIndex] > 600.0 && MR[metIndex] <= 3500.0){
+	    Razor1D[11]->Fill(RSQ[metIndex], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  }
+	}
+	
+      }
+    }
+
+  }
+
+  for(int j = 0; j < 12; j++){
+    Razor1DVec.push_back(Razor1D[j]);
+  }
+
+  return Razor1DVec;
+  
+}
+
+std::vector<TH1F*> BaseDM::PlotKine(){
+  double RSQ[4], MR[4], CSV[30];
+  double Jet_PT[30], Jet_Eta[30], Jet_Phi[30], Mu_Px[2], Mu_Py[2], Mu_Pz[2], Mu_E[2];
+  double pTHem1, pTHem2, etaHem1, etaHem2, phiHem1, phiHem2, pu_w, mu_w, sf_w, ISR_w;
+  int BOX, N_Jets, nBtag[2];
+  
+  std::vector< TH1F* > Razor1DKVec;
+  TH1F* Razor1DK[56];
+  TString name[6];
+  double hltWeight;
+  
+  for(int l = 0; l < 6; l++){
+    name[0] = TString(Form("PT_1D_J1_%dmu_BoxMC",l));
+    name[1] = TString(Form("ETA_1D_J1_%dmu_BoxMC",l));
+    name[2] = TString(Form("PHI_1D_J1_%dmu_BoxMC",l));
+    name[3] = TString(Form("PT_1D_J2_%dmu_BoxMC",l));
+    name[4] = TString(Form("ETA_1D_J2_%dmu_BoxMC",l));
+    name[5] = TString(Form("PHI_1D_J2_%dmu_BoxMC",l));
+    
+    Razor1DK[6*l] = new TH1F(name[0],name[0], 20, 80, 1000);
+    Razor1DK[6*l+1] = new TH1F(name[1],name[1], 20, -3.0, 3.0);
+    Razor1DK[6*l+2] = new TH1F(name[2],name[2], 20, -TMath::Pi(), TMath::Pi());
+    Razor1DK[6*l+3] = new TH1F(name[3],name[3], 20, 80, 1000);
+    Razor1DK[6*l+4] = new TH1F(name[4],name[4], 20, -3.0, 3.0);
+    Razor1DK[6*l+5] = new TH1F(name[5],name[5], 20, -TMath::Pi(), TMath::Pi());
+    
+    if(l < 3){
+      for(int k = 0; k < 6; k++)Razor1DK[6*l+k]->Sumw2();
+    }
+  }
+  
+  for(int l = 0; l < 2; l++){
+    int box_mu = 2;
+    name[0] = TString(Form("PT_1D_m1_%dmu_BoxMC_v%d",box_mu, l));
+    name[1] = TString(Form("ETA_1D_m1_%dmu_BoxMC_v%d",box_mu, l));
+    name[2] = TString(Form("PHI_1D_m1_%dmu_BoxMC_v%d",box_mu, l));
+    name[3] = TString(Form("PT_1D_m2_%dmu_BoxMC_v%d",box_mu, l));
+    name[4] = TString(Form("ETA_1D_m2_%dmu_BoxMC_v%d",box_mu, l));
+    name[5] = TString(Form("PHI_1D_m2_%dmu_BoxMC_v%d",box_mu, l));
+    
+    Razor1DK[36+9*l] = new TH1F(name[0],name[0], 20, 0.0, 1000);
+    Razor1DK[36+9*l+1] = new TH1F(name[1],name[1], 20, -3.0, 3.0);
+    Razor1DK[36+9*l+2] = new TH1F(name[2],name[2], 20, -TMath::Pi(), TMath::Pi());
+    Razor1DK[36+9*l+3] = new TH1F(name[3],name[3], 20, 0.0, 1000);
+    Razor1DK[36+9*l+4] = new TH1F(name[4],name[4], 20, -3.0, 3.0);
+    Razor1DK[36+9*l+5] = new TH1F(name[5],name[5], 20, -TMath::Pi(), TMath::Pi());
+    
+    box_mu = 1;
+    name[0] = TString(Form("PT_1D_m1_%dmu_BoxMC_v%d",box_mu, l));
+    name[1] = TString(Form("ETA_1D_m1_%dmu_BoxMC_v%d",box_mu, l));
+    name[2] = TString(Form("PHI_1D_m1_%dmu_BoxMC_v%d",box_mu, l));
+    
+    Razor1DK[36+9*l+6] = new TH1F(name[0],name[0], 20, 0.0, 1000);
+    Razor1DK[36+9*l+7] = new TH1F(name[1],name[1], 20, -3.0, 3.0);
+    Razor1DK[36+9*l+8] = new TH1F(name[2],name[2], 20, -TMath::Pi(), TMath::Pi());
+    
+    if(l < 1){
+      for(int k = 0; k < 9; k++)Razor1DK[36+9*l+k]->Sumw2();
+    }
+  }
+  
+  Razor1DK[54] = new TH1F("diMuMassMC", "diMuMassMC", 10, 75.0, 110.0);
+  Razor1DK[55] = new TH1F("diMuMass_errMC", "diMuMass_errMC", 10, 75.0, 110.0);
+  Razor1DK[55]->Sumw2();
+  
+  
+  SetStatusKine();
+  T->SetBranchAddress("pu_w", &pu_w);
+  T->SetBranchAddress("mu_w", &mu_w);
+  T->SetBranchAddress("RSQ", RSQ);
+  T->SetBranchAddress("MR", MR);
+  T->SetBranchAddress("BOX_NUM", &BOX);
+  //T->SetBranchAddress("nBtag", &nBtag[0]);
+  T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
+  T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  T->SetBranchAddress("N_Jets", &N_Jets);
+  T->SetBranchAddress("Jet_PT", &Jet_PT);
+  T->SetBranchAddress("Jet_Eta", &Jet_Eta);
+  T->SetBranchAddress("Jet_Phi", &Jet_Phi);
+  T->SetBranchAddress("CSV", CSV);
+  T->SetBranchAddress("pTHem1", &pTHem1);
+  T->SetBranchAddress("pTHem2", &pTHem2);
+  T->SetBranchAddress("etaHem1", &etaHem1);
+  T->SetBranchAddress("etaHem2", &etaHem2);
+  T->SetBranchAddress("phiHem1", &phiHem1);
+  T->SetBranchAddress("phiHem2", &phiHem2);
+  T->SetBranchAddress("Mu_Px", Mu_Px);
+  T->SetBranchAddress("Mu_Py", Mu_Py);
+  T->SetBranchAddress("Mu_Pz", Mu_Pz);
+  T->SetBranchAddress("Mu_E", Mu_E);
+  T->SetBranchAddress("sf_w", &sf_w);
+  T->SetBranchAddress("ISR_w", &ISR_w);
+  
+  //double e_sf = 0.2719076637;
+  double e_sf = 0.95461139896;//18.42 fb-1
+  
+  for(int i = 0; i < T->GetEntries(); i++){
+    T->GetEntry(i);
+    TLorentzVector j1, j2;//Megajet
+    TLorentzVector mu1, mu2, double_mu;
+    
+    j1.SetPtEtaPhiE(pTHem1, etaHem1, phiHem1, pTHem1*cosh(etaHem1));//Hemisphere1
+    j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere2
+    
+    double Dphi = j1.DeltaPhi(j2);
+    fBtag[0] = (nBtag[0] == 0);
+    fBtag[1] = fBtag[2] = (nBtag[0] >= nBtagCut[0]);
+    fBtag[3] = (nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
+    int nBtagMed = pfJetPassCSVM(CSV, N_Jets);
+    //fBtag[4] = ( nBtag[1] >= nBtagCut[2] && nBtagMed >= nBtagCut[1]);
+    fBtag[4] = (nBtag[1] >= nBtagCut[2]);
+    
+    if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && fabs(Dphi) < 2.5){
+      if(BOX == 0){
+        hltWeight = HLTscaleEle( MR[metIndex], RSQ[metIndex]);
+        if( hltWeight == 0.0 )hltWeight = 1.0;
+        Razor1DK[0]->Fill(Jet_PT[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[1]->Fill(Jet_Eta[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[2]->Fill(Jet_Phi[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[3]->Fill(Jet_PT[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	Razor1DK[4]->Fill(Jet_Eta[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	Razor1DK[5]->Fill(Jet_Phi[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	
+	Razor1DK[18]->Fill(Jet_PT[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[18+1]->Fill(Jet_Eta[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[18+2]->Fill(Jet_Phi[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[18+3]->Fill(Jet_PT[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[18+4]->Fill(Jet_Eta[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[18+5]->Fill(Jet_Phi[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+      }else if(BOX == 1){
+        hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
+        if( hltWeight == 0.0 )hltWeight = 1.0;
+        //Jet Plots
+	Razor1DK[6]->Fill(Jet_PT[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[7]->Fill(Jet_Eta[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[8]->Fill(Jet_Phi[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[9]->Fill(Jet_PT[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[10]->Fill(Jet_Eta[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[11]->Fill(Jet_Phi[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	
+	Razor1DK[18+6]->Fill(Jet_PT[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[18+7]->Fill(Jet_Eta[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[18+8]->Fill(Jet_Phi[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[18+9]->Fill(Jet_PT[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[18+10]->Fill(Jet_Eta[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+        Razor1DK[18+11]->Fill(Jet_Phi[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	
+	//Mu Plots
+	mu1.SetPxPyPzE(Mu_Px[0], Mu_Py[0], Mu_Pz[0], Mu_E[0]);
+	
+	Razor1DK[36+6]->Fill(mu1.Pt(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	Razor1DK[36+7]->Fill(mu1.Eta(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	Razor1DK[36+8]->Fill(mu1.Phi(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	
+	Razor1DK[36+15]->Fill(mu1.Pt(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	Razor1DK[36+16]->Fill(mu1.Eta(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	Razor1DK[36+17]->Fill(mu1.Phi(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	
+      }else if(BOX == 2){
+	double_mu.SetPxPyPzE(Mu_Px[0]+Mu_Px[1], Mu_Py[0]+Mu_Py[1], Mu_Pz[0]+Mu_Pz[1], Mu_E[0]+Mu_E[1]);
+	//std::cout << "-----" << double_mu.M() << std::endl;
+	if(double_mu.M() > 75.0 && double_mu.M() < 110.0){
+	  hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
+	  if( hltWeight == 0.0 )hltWeight = 1.0;
+	  Razor1DK[54]->Fill(double_mu.M(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[55]->Fill(double_mu.M(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  
+	  Razor1DK[12]->Fill(Jet_PT[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[13]->Fill(Jet_Eta[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[14]->Fill(Jet_Phi[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[15]->Fill(Jet_PT[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[16]->Fill(Jet_Eta[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[17]->Fill(Jet_Phi[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  
+	  Razor1DK[18+12]->Fill(Jet_PT[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[18+13]->Fill(Jet_Eta[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[18+14]->Fill(Jet_Phi[0], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[18+15]->Fill(Jet_PT[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[18+16]->Fill(Jet_Eta[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[18+17]->Fill(Jet_Phi[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  
+	  //Mu Plots
+	  mu1.SetPxPyPzE(Mu_Px[0], Mu_Py[0], Mu_Pz[0], Mu_E[0]);
+	  mu2.SetPxPyPzE(Mu_Px[1], Mu_Py[1], Mu_Pz[1], Mu_E[1]);
+	  
+	  Razor1DK[36]->Fill(mu1.Pt(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[36+1]->Fill(mu1.Eta(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[36+2]->Fill(mu1.Phi(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[36+3]->Fill(mu2.Pt(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[36+4]->Fill(mu2.Eta(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[36+5]->Fill(mu2.Phi(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  
+	  Razor1DK[36+9]->Fill(mu1.Pt(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[36+10]->Fill(mu1.Eta(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[36+11]->Fill(mu1.Phi(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[36+12]->Fill(mu2.Pt(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[36+13]->Fill(mu2.Eta(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[36+14]->Fill(mu2.Phi(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	}
+	
+      }
+    }
+
+  }
+  
+  for(int j = 0; j < 56; j++){
+    Razor1DKVec.push_back(Razor1DK[j]);
+  }
+  
+  return Razor1DKVec;
+
+};
 
 bool BaseDM::SetStatus(){
 
@@ -670,10 +1058,42 @@ bool BaseDM::SetStatus(){
   T->SetBranchStatus("etaHem2", 1);
   T->SetBranchStatus("phiHem1", 1);
   T->SetBranchStatus("phiHem2", 1);
-  //T->SetBranchStatus("nBtagLCorr", 1);
-  //T->SetBranchStatus("nBtagLCorrUp", 1);
-  //T->SetBranchStatus("nBtagLCorrDown", 1);
+  T->SetBranchStatus("Mu_Px",1);
+  T->SetBranchStatus("Mu_Py",1);
+  T->SetBranchStatus("Mu_Pz",1);
+  T->SetBranchStatus("Mu_E",1);
+  T->SetBranchStatus("nBtagLCorr", 1);
   T->SetBranchStatus("sf_w", 1);
+  T->SetBranchStatus("ISR_w", 1);
+};
+
+bool BaseDM::SetStatusKine(){
+  T->SetBranchStatus("*",0); //disable all branches
+  T->SetBranchStatus("pu_w",1);
+  T->SetBranchStatus("mu_w",1);
+  T->SetBranchStatus("RSQ",1);
+  T->SetBranchStatus("MR",1);
+  T->SetBranchStatus("BOX_NUM",1);
+  T->SetBranchStatus("nBtag",1);
+  T->SetBranchStatus("nBtagLCorr", 1);
+  T->SetBranchStatus("nBtagTight",1);
+  T->SetBranchStatus("N_Jets",1);
+  T->SetBranchStatus("Jet_PT",1);
+  T->SetBranchStatus("Jet_Eta",1);
+  T->SetBranchStatus("Jet_Phi",1);
+  T->SetBranchStatus("CSV",1);
+  T->SetBranchStatus("pTHem1", 1);
+  T->SetBranchStatus("pTHem2", 1);
+  T->SetBranchStatus("etaHem1", 1);
+  T->SetBranchStatus("etaHem2", 1);
+  T->SetBranchStatus("phiHem1", 1);
+  T->SetBranchStatus("phiHem2", 1);
+  T->SetBranchStatus("Mu_Px",1);
+  T->SetBranchStatus("Mu_Py",1);
+  T->SetBranchStatus("Mu_Pz",1);
+  T->SetBranchStatus("Mu_E",1);
+  T->SetBranchStatus("sf_w", 1);
+  T->SetBranchStatus("ISR_w", 1);
 };
 
 bool BaseDM::SetMetStatus(){
@@ -684,6 +1104,7 @@ bool BaseDM::SetMetStatus(){
   T->SetBranchStatus("MR",1);
   T->SetBranchStatus("BOX_NUM",1);
   T->SetBranchStatus("nBtag",1);
+  T->SetBranchStatus("nBtagLCorr", 1);
   T->SetBranchStatus("nBtagTight",1);
   T->SetBranchStatus("N_Jets",1);
   T->SetBranchStatus("CSV",1);
@@ -701,10 +1122,12 @@ bool BaseDM::SetMetStatus(){
   T->SetBranchStatus("N_Jets",1);
   T->SetBranchStatus("idMC", 1);
   T->SetBranchStatus("statusMC", 1);
-  //T->SetBranchStatus("nBtagLCorr", 1);
-  //T->SetBranchStatus("nBtagLCorrUp", 1);
-  //T->SetBranchStatus("nBtagLCorrDown", 1);
+  T->SetBranchStatus("Mu_Px",1);
+  T->SetBranchStatus("Mu_Py",1);
+  T->SetBranchStatus("Mu_Pz",1);
+  T->SetBranchStatus("Mu_E",1);
   T->SetBranchStatus("sf_w", 1);
+  T->SetBranchStatus("ISR_w", 1);
 };
 
 double BaseDM::HLTscale(double MR, double R2){
@@ -772,5 +1195,3 @@ double BaseDM::HLTscaleEle(double MR, double R2){
   return eff_ele->GetEfficiency(eff_ele->GetGlobalBin(MRbin, R2bin , 0));
   
 };
-
-
