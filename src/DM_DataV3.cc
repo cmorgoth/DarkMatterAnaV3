@@ -622,13 +622,13 @@ std::vector<TH1F*> Data::Plot_MRCat(){
   
   int BOX, N_Jets, nBtag[2];
   int c1_bins = 11;
-  float c1B[] = {0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.9, 0.95, 1.0, 2.5};
+  float c1B[] = {0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.9, 0.95, 1.0, 1.2};
   int c2_bins = 6;
-  float c2B[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 2.5};
+  float c2B[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 1.2};
   int c3_bins = 6;
-  float c3B[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 2.5};
+  float c3B[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 1.2};
   int c4_bins = 4;
-  float c4B[] = {0.50, 0.60, 0.70, .950, 2.50};
+  float c4B[] = {0.50, 0.60, 0.70, .950, 1.20};
     
   std::vector< TH1F* > Razor1DVec;
   TH1F* Razor1D[12];
@@ -690,6 +690,7 @@ std::vector<TH1F*> Data::Plot_MRCat(){
     fBtag[4] = (nBtag[1] >= nBtagCut[2]);
     
     if( RSQ[metIndex] > RSQMin && MR[metIndex] > MRMin  && fBtag[btagIndex] && fabs(Dphi) < 2.5){
+      if(RSQ[metIndex] > 1.20)RSQ[metIndex] = 1.1;
       if(BOX == 0){
 	if(MR[metIndex] > 200.0 && MR[metIndex] <= 300.0 ){
 	  Razor1D[0]->Fill(RSQ[metIndex]);
