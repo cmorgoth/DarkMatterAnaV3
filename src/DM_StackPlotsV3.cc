@@ -4,8 +4,10 @@
 void CreateStackPlots(){
   
   int bL, bM, bT;
-  bL = bM = 0;
-  bT = 0;
+  bL = bM = 2;
+  bT = 2;
+
+  std::cout << "bTag Loose: " << bL << " bTag Med: " << bM << " bTag Tight: " << bT << std::endl;
 
   WJetsHTBins* W = new WJetsHTBins( 2 );
   ///////////////////////////////////////////

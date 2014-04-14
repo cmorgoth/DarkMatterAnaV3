@@ -133,6 +133,8 @@ int RatioPlots(TH1F* h1, TH1F* h2, TString h1Name = "h1Name", TString h2Name = "
  
   RATIO->Draw();
   C->cd();
+  C->SaveAs(fname + ".C");
+  C->SaveAs(fname + ".root");
   C->SaveAs(fname + ".pdf");
   C->SaveAs(fname + ".png");
   
@@ -337,6 +339,8 @@ int RatioPlotsV2(THStack* s, TH1F* h2, TH1F* h1, TString h1Name = "h1Name", TStr
   RATIO->SetFillColor(4);
   RATIO->Draw();
   C->cd();
+  C->SaveAs(fname + ".C");
+  C->SaveAs(fname + ".root");
   C->SaveAs(fname + ".pdf");
   C->SaveAs(fname + ".png");
 

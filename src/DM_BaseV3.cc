@@ -401,7 +401,11 @@ std::vector<TH1F*> BaseDM::PlotMETmag(){
   T->SetBranchAddress("BOX_NUM", &BOX);
   //T->SetBranchAddress("nBtag", &nBtag[0]);
   T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
-  T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  if(this->pName == "TT"){
+    T->SetBranchAddress("nBtagTCorr", &nBtag[1]);
+  }else{
+    T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  }
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
   T->SetBranchAddress("ht", &ht);
@@ -512,7 +516,11 @@ std::vector<TH2F*> BaseDM::Plot_2DRazor(){
   T->SetBranchAddress("BOX_NUM", &BOX);
   //T->SetBranchAddress("nBtag", &nBtag[0]);
   T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
-  T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  if(this->pName == "TT"){
+    T->SetBranchAddress("nBtagTCorr", &nBtag[1]);
+  }else{
+    T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  }
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
   T->SetBranchAddress("pTHem1", &pTHem1);
@@ -618,7 +626,11 @@ std::vector<TH1F*> BaseDM::Plot_1DRazor(){
   T->SetBranchAddress("BOX_NUM", &BOX);
   //T->SetBranchAddress("nBtag", &nBtag[0]);
   T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
-  T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  if(this->pName == "TT"){
+    T->SetBranchAddress("nBtagTCorr", &nBtag[1]);
+  }else{
+    T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  }
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
   T->SetBranchAddress("pTHem1", &pTHem1);
@@ -738,7 +750,11 @@ std::vector<TH1F*> BaseDM::Plot_MRCat(){
   T->SetBranchAddress("BOX_NUM", &BOX);
   //T->SetBranchAddress("nBtag", &nBtag[0]);
   T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
-  T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  if(this->pName == "TT"){
+    T->SetBranchAddress("nBtagTCorr", &nBtag[1]);
+  }else{
+    T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  }
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("CSV", CSV);
   T->SetBranchAddress("pTHem1", &pTHem1);
@@ -902,7 +918,11 @@ std::vector<TH1F*> BaseDM::PlotKine(){
   T->SetBranchAddress("BOX_NUM", &BOX);
   //T->SetBranchAddress("nBtag", &nBtag[0]);
   T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
-  T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  if(this->pName == "TT"){
+    T->SetBranchAddress("nBtagTCorr", &nBtag[1]);
+  }else{
+    T->SetBranchAddress("nBtagTight", &nBtag[1]);
+  }
   T->SetBranchAddress("N_Jets", &N_Jets);
   T->SetBranchAddress("Jet_PT", &Jet_PT);
   T->SetBranchAddress("Jet_Eta", &Jet_Eta);

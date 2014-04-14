@@ -28,9 +28,11 @@ const float BaseDM::MR_BinArr[] = {200., 300., 400., 600., 3500.};
 int main(){
   
   int bL, bM, bT;
-  bL = bM = 0;
-  bT = 0;
+  bL = bM = 2;
+  bT = 2;
 
+  std::cout << "bTag Loose: " << bL << " bTag Med: " << bM << " bTag Tight: " << bT << std::endl;
+  
   std::ofstream ofs("TEXFiles/VetoBtag_MCVB_Pt100.tex", std::ofstream::out);
   
   ///////////////////////////////
