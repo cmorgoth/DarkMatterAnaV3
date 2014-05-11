@@ -25,7 +25,7 @@ TARGET1 = DataAnaEff
 
 SRC = src/testV3_MRCategories.cc src/DM_StackPlotsV3.cc src/DM_1DRatioV3.cc src/DM_2DRatioV3.cc src/DM_BaseV3.cc src/DM_DY_HTBinsV3.cc src/DM_TT_LSLHV3.cc src/DM_DataV3.cc src/DM_ZJetsNuNuV3.cc src/DM_WJetsHTBinsV3.cc src/DM_METPlotsV3.cc src/DM_KinePlotsV3.cc
 
-SRC1 = simple_data_yield_study.cc
+SRC1 = src/simple_data_yield_study.cc
 
 OBJ = $(SRC:.cc=.o)
 
