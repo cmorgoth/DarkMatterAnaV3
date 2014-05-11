@@ -621,15 +621,49 @@ std::vector<TH1F*> Data::Plot_MRCat(){
   double Mu_Px[2], Mu_Py[2], Mu_Pz[2], Mu_E[2];
   
   int BOX, N_Jets, nBtag[2];
-  int c1_bins = 11;
-  float c1B[] = {0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.9, 0.95, 1.0, 1.2};
-  int c2_bins = 6;
-  float c2B[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 1.2};
-  int c3_bins = 6;
-  float c3B[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 1.2};
-  int c4_bins = 4;
-  float c4B[] = {0.50, 0.60, 0.70, .950, 1.20};
-    
+  int c1_bins_1 = 11;
+  float c1B_1[] = {0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.9, 0.95, 1.0, 1.2};
+  int c2_bins_1 = 6;
+  float c2B_1[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 1.2};
+  int c3_bins_1 = 6;
+  float c3B_1[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 1.2};
+  int c4_bins_1 = 4;
+  float c4B_1[] = {0.50, 0.60, 0.70, .950, 1.20};
+  //v2                                                                                                                                      
+  int c1_bins_2 = 7;
+  float c1B_2[] = {0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 1.2};
+  int c2_bins_2 = 4;
+  float c2B_2[] = {0.50, 0.575, 0.65, 0.75, 1.2};
+  int c3_bins_2 = 4;
+  float c3B_2[] = {0.50, 0.575, 0.65, 0.75, 1.2};
+  int c4_bins_2 = 4;
+  float c4B_2[] = {0.50, 0.575, 0.65, 0.75, 1.2};
+  int c1_bins, c2_bins,c3_bins, c4_bins;
+  float* c1B;
+  float* c2B;
+  float* c3B;
+  float* c4B;
+  std::cout << "bTag Index: " << btagIndex << std::endl;
+  if(btagIndex == 0){
+    c1_bins = 11;
+    c1B = c1B_1;
+    c2_bins = 6;
+    c2B = c2B_1;
+    c3_bins = 6;
+    c3B = c3B_1;
+    c4_bins = 4;
+    c4B = c4B_1;
+  }else{
+    c1_bins = 7;
+    c1B = c1B_2;
+    c2_bins = 4;
+    c2B = c2B_2;
+    c3_bins = 4;
+    c3B = c3B_2;
+    c4_bins = 4;
+    c4B = c4B_2;
+  }
+  
   std::vector< TH1F* > Razor1DVec;
   TH1F* Razor1D[12];
   TString name1, name2, name3, name4;
@@ -746,7 +780,7 @@ std::vector<TH1F*> Data::PlotKine(){
   int BOX, N_Jets, nBtag[2];
 
   std::vector< TH1F* > Razor1DKVec;
-  TH1F* Razor1DK[56];
+  TH1F* Razor1DK[68];
   TString name[6];
   double hltWeight;
   
@@ -803,6 +837,18 @@ std::vector<TH1F*> Data::PlotKine(){
   Razor1DK[54] = new TH1F("diMuMass", "diMuMass", 10, 75.0, 110.0);
   Razor1DK[55] = new TH1F("diMuMass_err", "diMuMass_err", 10, 75.0, 110.0);
   Razor1DK[55]->Sumw2();
+
+  //HT and DeltaPhi
+  for(int k = 0; k < 6; k++){
+    TString n(Form("HT_%dmu_%d",k%3,k));
+    Razor1DK[56+k] = new TH1F(n, n, 20, 0.0, 1400.0);
+    n = Form("Dphi_%dmu_%d",k%3,k);
+    Razor1DK[62+k] = new TH1F(n, n, 20,  -TMath::Pi(), TMath::Pi());
+    if(k < 3){
+      Razor1DK[56+k]->Sumw2();
+      Razor1DK[62+k]->Sumw2();
+    }
+  }
   
   SetStatusKine();
   
@@ -812,9 +858,9 @@ std::vector<TH1F*> Data::PlotKine(){
   T->SetBranchAddress("nBtag", &nBtag[0]);
   T->SetBranchAddress("nBtagTight", &nBtag[1]);
   T->SetBranchAddress("N_Jets", &N_Jets);
-  T->SetBranchAddress("Jet_PT", &Jet_PT);
-  T->SetBranchAddress("Jet_Eta", &Jet_Eta);
-  T->SetBranchAddress("Jet_Phi", &Jet_Phi);
+  T->SetBranchAddress("Jet_PT", Jet_PT);
+  T->SetBranchAddress("Jet_Eta", Jet_Eta);
+  T->SetBranchAddress("Jet_Phi", Jet_Phi);
   T->SetBranchAddress("CSV", CSV);
   T->SetBranchAddress("pTHem1", &pTHem1);
   T->SetBranchAddress("pTHem2", &pTHem2);
@@ -836,6 +882,10 @@ std::vector<TH1F*> Data::PlotKine(){
     j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere2
 
     double Dphi = j1.DeltaPhi(j2);
+    float HT = 0.0;
+    for(int iJ = 0; iJ < N_Jets; iJ++){
+      HT += Jet_PT[iJ];
+    }
     fBtag[0] = (nBtag[0] == 0);
     fBtag[1] = fBtag[2] = (nBtag[0] >= nBtagCut[0]);
     fBtag[3] = (nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
@@ -858,6 +908,11 @@ std::vector<TH1F*> Data::PlotKine(){
         Razor1DK[18+3]->Fill(Jet_PT[1]);
         Razor1DK[18+4]->Fill(Jet_Eta[1]);
         Razor1DK[18+5]->Fill(Jet_Phi[1]);
+	//HT and Dphi
+	Razor1DK[56]->Fill(HT);
+	Razor1DK[56+3]->Fill(HT);//No sumw2
+	Razor1DK[62]->Fill(Dphi);
+	Razor1DK[62+3]->Fill(Dphi);//No sumw2
       }else if(BOX == 1){
 	//Jet Plots
 	Razor1DK[6]->Fill(Jet_PT[0]);
@@ -884,6 +939,12 @@ std::vector<TH1F*> Data::PlotKine(){
 	Razor1DK[36+15]->Fill(mu1.Pt());
 	Razor1DK[36+16]->Fill(mu1.Eta());
 	Razor1DK[36+17]->Fill(mu1.Phi());
+
+	//HT and Dphi
+	Razor1DK[57]->Fill(HT);
+	Razor1DK[57+3]->Fill(HT);//No sumw2
+	Razor1DK[63]->Fill(Dphi);
+	Razor1DK[63+3]->Fill(Dphi);//No sumw2
 	
       }else if(BOX == 2){
 	double_mu.SetPxPyPzE(Mu_Px[0]+Mu_Px[1], Mu_Py[0]+Mu_Py[1], Mu_Pz[0]+Mu_Pz[1], Mu_E[0]+Mu_E[1]);
@@ -923,6 +984,12 @@ std::vector<TH1F*> Data::PlotKine(){
 	  Razor1DK[36+12]->Fill(mu2.Pt());
 	  Razor1DK[36+13]->Fill(mu2.Eta());
 	  Razor1DK[36+14]->Fill(mu2.Phi());
+	  
+	   //HT and Dphi
+	  Razor1DK[58]->Fill(HT);
+	  Razor1DK[58+3]->Fill(HT);//No sumw2
+	  Razor1DK[64]->Fill(Dphi);
+	  Razor1DK[64+3]->Fill(Dphi);//No sumw2
 	}
 	
       }
@@ -930,7 +997,7 @@ std::vector<TH1F*> Data::PlotKine(){
 
   }
   
-  for(int j = 0; j < 56; j++){
+  for(int j = 0; j < 68; j++){
     Razor1DKVec.push_back(Razor1DK[j]);
   }
   

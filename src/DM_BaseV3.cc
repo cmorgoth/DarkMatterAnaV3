@@ -711,14 +711,48 @@ std::vector<TH1F*> BaseDM::Plot_MRCat(){
   double Mu_Px[2], Mu_Py[2], Mu_Pz[2], Mu_E[2];
   
   int BOX, N_Jets, nBtag[2];
-  int c1_bins = 11;
-  float c1B[] = {0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.9, 0.95, 1.0, 1.2};
-  int c2_bins = 6;
-  float c2B[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 1.2};
-  int c3_bins = 6;
-  float c3B[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 1.2};
-  int c4_bins = 4;
-  float c4B[] = {0.50, 0.60, 0.70, .950, 1.20};
+  int c1_bins_1 = 11;
+  float c1B_1[] = {0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.9, 0.95, 1.0, 1.2};
+  int c2_bins_1 = 6;
+  float c2B_1[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 1.2};
+  int c3_bins_1 = 6;
+  float c3B_1[] = {0.50, 0.575, 0.65, 0.75, 0.85, .950, 1.2};
+  int c4_bins_1 = 4;
+  float c4B_1[] = {0.50, 0.60, 0.70, .950, 1.20};
+  //v2
+  int c1_bins_2 = 7;
+  float c1B_2[] = {0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 1.2};
+  int c2_bins_2 = 4;
+  float c2B_2[] = {0.50, 0.575, 0.65, 0.75, 1.2};
+  int c3_bins_2 = 4;
+  float c3B_2[] = {0.50, 0.575, 0.65, 0.75, 1.2};
+  int c4_bins_2 = 4;
+  float c4B_2[] = {0.50, 0.575, 0.65, 0.75, 1.2};
+  int c1_bins, c2_bins, c3_bins, c4_bins;
+  float* c1B;
+  float* c2B;
+  float* c3B;
+  float* c4B;
+  std::cout << "bTag Index: " << btagIndex << std::endl;
+  if(btagIndex == 0){
+    c1_bins = 11;
+    c1B = c1B_1;
+    c2_bins = 6;
+    c2B = c2B_1;
+    c3_bins = 6;
+    c3B = c3B_1;
+    c4_bins = 4;
+    c4B = c4B_1;
+  }else{
+    c1_bins = 7;
+    c1B = c1B_2;
+    c2_bins = 4;
+    c2B = c2B_2;
+    c3_bins = 4;
+    c3B = c3B_2;
+    c4_bins = 4;
+    c4B = c4B_2;
+  }
     
   std::vector< TH1F* > Razor1DVec;
   TH1F* Razor1D[12];
@@ -748,7 +782,6 @@ std::vector<TH1F*> BaseDM::Plot_MRCat(){
   T->SetBranchAddress("RSQ", RSQ);
   T->SetBranchAddress("MR", MR);
   T->SetBranchAddress("BOX_NUM", &BOX);
-  //T->SetBranchAddress("nBtag", &nBtag[0]);
   T->SetBranchAddress("nBtagLCorr", &nBtag[0]);
   if(this->pName == "TT"){
     T->SetBranchAddress("nBtagTCorr", &nBtag[1]);
@@ -768,7 +801,7 @@ std::vector<TH1F*> BaseDM::Plot_MRCat(){
   T->SetBranchAddress("Mu_Pz", Mu_Pz);
   T->SetBranchAddress("Mu_E", Mu_E);
   T->SetBranchAddress("sf_w", &sf_w);
-  T->SetBranchAddress("ISR_w", &ISR_w);
+  T->SetBranchAddress("ISR_w_down", &ISR_w);
   
   //double e_sf = 0.2719076637;
   double e_sf = 0.95461139896;//18.42 fb-1
@@ -851,7 +884,7 @@ std::vector<TH1F*> BaseDM::PlotKine(){
   int BOX, N_Jets, nBtag[2];
   
   std::vector< TH1F* > Razor1DKVec;
-  TH1F* Razor1DK[56];
+  TH1F* Razor1DK[68];
   TString name[6];
   double hltWeight;
   
@@ -909,6 +942,13 @@ std::vector<TH1F*> BaseDM::PlotKine(){
   Razor1DK[55] = new TH1F("diMuMass_errMC", "diMuMass_errMC", 10, 75.0, 110.0);
   Razor1DK[55]->Sumw2();
   
+  //HT and DeltaPhi
+  for(int k = 0; k < 6; k++){
+    TString n(Form("HT_%dmu_%d",k%3,k));
+    Razor1DK[56+k] = new TH1F(n, n, 20, 0.0, 1400.0);
+    n = Form("Dphi_%dmu_%d",k%3,k);
+    Razor1DK[62+k] = new TH1F(n, n, 20,  -TMath::Pi(), TMath::Pi());
+  }
   
   SetStatusKine();
   T->SetBranchAddress("pu_w", &pu_w);
@@ -924,9 +964,9 @@ std::vector<TH1F*> BaseDM::PlotKine(){
     T->SetBranchAddress("nBtagTight", &nBtag[1]);
   }
   T->SetBranchAddress("N_Jets", &N_Jets);
-  T->SetBranchAddress("Jet_PT", &Jet_PT);
-  T->SetBranchAddress("Jet_Eta", &Jet_Eta);
-  T->SetBranchAddress("Jet_Phi", &Jet_Phi);
+  T->SetBranchAddress("Jet_PT", Jet_PT);
+  T->SetBranchAddress("Jet_Eta", Jet_Eta);
+  T->SetBranchAddress("Jet_Phi", Jet_Phi);
   T->SetBranchAddress("CSV", CSV);
   T->SetBranchAddress("pTHem1", &pTHem1);
   T->SetBranchAddress("pTHem2", &pTHem2);
@@ -953,6 +993,10 @@ std::vector<TH1F*> BaseDM::PlotKine(){
     j2.SetPtEtaPhiE(pTHem2, etaHem2, phiHem2, pTHem2*cosh(etaHem2));//Hemisphere2
     
     double Dphi = j1.DeltaPhi(j2);
+    float HT = 0.0;
+    for(int iJ = 0; iJ < N_Jets; iJ++){
+      HT += Jet_PT[iJ];
+    }
     fBtag[0] = (nBtag[0] == 0);
     fBtag[1] = fBtag[2] = (nBtag[0] >= nBtagCut[0]);
     fBtag[3] = (nBtag[1] >= nBtagCut[2] && nBtag[0] >= nBtagCut[0] );
@@ -977,6 +1021,13 @@ std::vector<TH1F*> BaseDM::PlotKine(){
         Razor1DK[18+3]->Fill(Jet_PT[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
         Razor1DK[18+4]->Fill(Jet_Eta[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
         Razor1DK[18+5]->Fill(Jet_Phi[1], sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	
+	//HT and Dphi
+	Razor1DK[56]->Fill(HT, sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	Razor1DK[56+3]->Fill(HT, sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);//No sumw2
+	Razor1DK[62]->Fill(Dphi, sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	Razor1DK[62+3]->Fill(Dphi, sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);//No sumw2
+	
       }else if(BOX == 1){
         hltWeight = HLTscale( MR[metIndex], RSQ[metIndex]);
         if( hltWeight == 0.0 )hltWeight = 1.0;
@@ -1005,6 +1056,12 @@ std::vector<TH1F*> BaseDM::PlotKine(){
 	Razor1DK[36+15]->Fill(mu1.Pt(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
 	Razor1DK[36+16]->Fill(mu1.Eta(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
 	Razor1DK[36+17]->Fill(mu1.Phi(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+
+	//HT and Dphi
+	Razor1DK[57]->Fill(HT, sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	Razor1DK[57+3]->Fill(HT, sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);//No sumw2
+	Razor1DK[63]->Fill(Dphi, sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	Razor1DK[63+3]->Fill(Dphi, sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);//No sumw2
 	
       }else if(BOX == 2){
 	double_mu.SetPxPyPzE(Mu_Px[0]+Mu_Px[1], Mu_Py[0]+Mu_Py[1], Mu_Pz[0]+Mu_Pz[1], Mu_E[0]+Mu_E[1]);
@@ -1046,6 +1103,12 @@ std::vector<TH1F*> BaseDM::PlotKine(){
 	  Razor1DK[36+12]->Fill(mu2.Pt(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
 	  Razor1DK[36+13]->Fill(mu2.Eta(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
 	  Razor1DK[36+14]->Fill(mu2.Phi(), sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+
+	  //HT and Dphi
+	  Razor1DK[58]->Fill(HT, sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[58+3]->Fill(HT, sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);//No sumw2
+	  Razor1DK[64]->Fill(Dphi, sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);
+	  Razor1DK[64+3]->Fill(Dphi, sf_w*hltWeight*pu_w*mu_w*e_sf*ISR_w);//No sumw2
 	}
 	
       }
@@ -1053,7 +1116,7 @@ std::vector<TH1F*> BaseDM::PlotKine(){
 
   }
   
-  for(int j = 0; j < 56; j++){
+  for(int j = 0; j < 68; j++){
     Razor1DKVec.push_back(Razor1DK[j]);
   }
   
@@ -1062,15 +1125,25 @@ std::vector<TH1F*> BaseDM::PlotKine(){
 };
 
 bool BaseDM::SetStatus(){
-
   T->SetBranchStatus("*",0); //disable all branches
   T->SetBranchStatus("pu_w",1);
   T->SetBranchStatus("mu_w",1);
+  T->SetBranchStatus("mu_w_up", 1);
+  T->SetBranchStatus("mu_w_down",1);
   T->SetBranchStatus("RSQ",1);
   T->SetBranchStatus("MR",1);
   T->SetBranchStatus("BOX_NUM",1);
   T->SetBranchStatus("nBtag",1);
-  T->SetBranchStatus("nBtagTight",1);
+  T->SetBranchStatus("nBtagLCorr", 1);
+  T->SetBranchStatus("nBtagLCorrUp", 1);
+  T->SetBranchStatus("nBtagLCorrDown", 1);
+  if(this->pName == "TT"){
+    T->SetBranchStatus("nBtagTCorr", 1);
+    T->SetBranchStatus("nBtagTCorrUp", 1);
+    T->SetBranchStatus("nBtagTCorrDown", 1);
+  }else{
+    T->SetBranchStatus("nBtagTight", 1);
+  }
   T->SetBranchStatus("N_Jets",1);
   T->SetBranchStatus("CSV",1);
   T->SetBranchStatus("pTHem1", 1);
@@ -1083,21 +1156,32 @@ bool BaseDM::SetStatus(){
   T->SetBranchStatus("Mu_Py",1);
   T->SetBranchStatus("Mu_Pz",1);
   T->SetBranchStatus("Mu_E",1);
-  T->SetBranchStatus("nBtagLCorr", 1);
   T->SetBranchStatus("sf_w", 1);
   T->SetBranchStatus("ISR_w", 1);
+  T->SetBranchStatus("ISR_w_up", 1);
+  T->SetBranchStatus("ISR_w_down", 1);
 };
 
 bool BaseDM::SetStatusKine(){
   T->SetBranchStatus("*",0); //disable all branches
   T->SetBranchStatus("pu_w",1);
   T->SetBranchStatus("mu_w",1);
+  T->SetBranchStatus("mu_w_up", 1);
+  T->SetBranchStatus("mu_w_down",1);
   T->SetBranchStatus("RSQ",1);
   T->SetBranchStatus("MR",1);
   T->SetBranchStatus("BOX_NUM",1);
   T->SetBranchStatus("nBtag",1);
   T->SetBranchStatus("nBtagLCorr", 1);
-  T->SetBranchStatus("nBtagTight",1);
+  T->SetBranchStatus("nBtagLCorrUp", 1);
+  T->SetBranchStatus("nBtagLCorrDown", 1);
+  if(this->pName == "TT"){
+    T->SetBranchStatus("nBtagTCorr", 1);
+    T->SetBranchStatus("nBtagTCorrUp", 1);
+    T->SetBranchStatus("nBtagTCorrDown", 1);
+  }else{
+    T->SetBranchStatus("nBtagTight", 1);
+  }
   T->SetBranchStatus("N_Jets",1);
   T->SetBranchStatus("Jet_PT",1);
   T->SetBranchStatus("Jet_Eta",1);
@@ -1115,18 +1199,30 @@ bool BaseDM::SetStatusKine(){
   T->SetBranchStatus("Mu_E",1);
   T->SetBranchStatus("sf_w", 1);
   T->SetBranchStatus("ISR_w", 1);
+  T->SetBranchStatus("ISR_w_up", 1);
+  T->SetBranchStatus("ISR_w_down", 1);
 };
 
 bool BaseDM::SetMetStatus(){
-  T->SetBranchStatus("*",0); //disable all branches                                                                                                     
+  T->SetBranchStatus("*",0); //disable all branches                               
   T->SetBranchStatus("pu_w",1);
-  T->SetBranchStatus("mu_w",1);           
+  T->SetBranchStatus("mu_w",1);
+  T->SetBranchStatus("mu_w_up", 1);
+  T->SetBranchStatus("mu_w_down",1);
   T->SetBranchStatus("RSQ",1);
   T->SetBranchStatus("MR",1);
   T->SetBranchStatus("BOX_NUM",1);
   T->SetBranchStatus("nBtag",1);
   T->SetBranchStatus("nBtagLCorr", 1);
-  T->SetBranchStatus("nBtagTight",1);
+  T->SetBranchStatus("nBtagLCorrUp", 1);
+  T->SetBranchStatus("nBtagLCorrDown", 1);
+  if(this->pName == "TT"){
+    T->SetBranchStatus("nBtagTCorr", 1);
+    T->SetBranchStatus("nBtagTCorrUp", 1);
+    T->SetBranchStatus("nBtagTCorrDown", 1);
+  }else{
+    T->SetBranchStatus("nBtagTight", 1);
+  }
   T->SetBranchStatus("N_Jets",1);
   T->SetBranchStatus("CSV",1);
   T->SetBranchStatus("pTHem1", 1);
@@ -1149,6 +1245,8 @@ bool BaseDM::SetMetStatus(){
   T->SetBranchStatus("Mu_E",1);
   T->SetBranchStatus("sf_w", 1);
   T->SetBranchStatus("ISR_w", 1);
+  T->SetBranchStatus("ISR_w_up", 1);
+  T->SetBranchStatus("ISR_w_down", 1);
 };
 
 double BaseDM::HLTscale(double MR, double R2){

@@ -28,13 +28,13 @@ const float BaseDM::MR_BinArr[] = {200., 300., 400., 600., 3500.};
 int main(){
   
   int bL, bM, bT;
-  bL = bM = 1;
-  bT = 1;
+  bL = bM = 0;
+  bT = 0;
 
    
   TCanvas* C1 = new TCanvas("C1", "C1", 1024, 1024);
   C1->cd();
-  std::ofstream ofs("TEXFiles/OneTightBtagCorr.tex", std::ofstream::out);
+  std::ofstream ofs("TEXFiles/VetoBtag_ISR_Down.tex", std::ofstream::out);
   
   
   DY* dy = new DY( 2 );
@@ -95,7 +95,7 @@ int main(){
   }
   
   
-  TFile* f1 = new TFile("ROOTFiles/OneTightBtagCorr_MRcategories.root", "RECREATE");
+  TFile* f1 = new TFile("ROOTFiles/VetoBtag_ISR_Down.root", "RECREATE");
   for(int i = 0; i < 12; i++){
     (DYjets[i])->Write();
     (Zjets[i])->Write();

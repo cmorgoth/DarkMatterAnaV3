@@ -26,10 +26,10 @@ const float BaseDM::MR_BinArr[] = {200., 300., 400., 600., 3500.};
 
 int main(){
   
-  CreateStackPlots();
+  //CreateStackPlots();
   //CreateRatioPlots();
   //Create2DPlots();
-  CreateMetPlots();
+  //CreateMetPlots();
   CreateKinePlots();
   
   return 0;

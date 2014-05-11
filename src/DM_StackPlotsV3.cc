@@ -4,8 +4,8 @@
 void CreateStackPlots(){
   
   int bL, bM, bT;
-  bL = bM = 2;
-  bT = 2;
+  bL = bM = 0;
+  bT = 0;
 
   std::cout << "bTag Loose: " << bL << " bTag Med: " << bM << " bTag Tight: " << bT << std::endl;
 

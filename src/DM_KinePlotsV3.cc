@@ -4,8 +4,8 @@
 void CreateKinePlots(){
   
   int bL, bM, bT;
-  bL = bM = 2;
-  bT = 2;
+  bL = bM = 0;
+  bT = 0;
   
   std::cout << "bTag Loose: " << bL << " bTag Med: " << bM << " bTag Tight: " << bT << std::endl;
   WJetsHTBins* W = new WJetsHTBins( 2 );
@@ -78,7 +78,7 @@ void CreateKinePlots(){
   
   // THStack* stack1 = new THStack("stack1", "");
   
-  for(int k = 0; k < 56; k++){
+  for(int k = 0; k < 68; k++){
     data_histos[k]->SetMarkerStyle(20);
     data_histos[k]->SetLineColor(1);
     data_histos[k]->SetMarkerSize(1.5);
@@ -91,16 +91,18 @@ void CreateKinePlots(){
     dy_jets[k]->SetFillColor(kViolet+9);
     dy_jets[k]->SetTitle("");
     dy_jets[k]->SetStats(0);
-    Zjets[k]->SetFillColor(kYellow-4);
-    Zjets[k]->SetTitle("");
-    Zjets[k]->SetStats(0);
-    Wjets[k]->SetFillColor(kSpring+4);
+    Wjets[k]->SetFillColor(kYellow-4);
     Wjets[k]->SetTitle("");
     Wjets[k]->SetStats(0);
+    
+    Zjets[k]->SetFillColor(kSpring+4);
+    Zjets[k]->SetTitle("");
+    Zjets[k]->SetStats(0);
   }
+  
   TH1F* aux2;
   THStack* stack1;
-    
+  
   for(int m = 0; m < 18; m++){
     stack1 = new THStack("stack1", "");
     leg = new TLegend(0.7,0.7,0.9,0.92);
@@ -308,5 +310,101 @@ void CreateKinePlots(){
   delete leg;
   delete aux2;
   delete stack1;
-  
+
+  for(int m = 56; m < 59; m++){
+    stack1 = new THStack("stack1", "");
+    leg = new TLegend(0.7,0.7,0.9,0.92);
+    
+    leg->AddEntry(Wjets[m+3],"W + jets","f");
+    leg->AddEntry(Zjets[m+3],"Z(#nu#bar{#nu}) + jets","f");
+    leg->AddEntry(TTjets[m+3],"t #bar{t} + jets","f");
+    leg->AddEntry(dy_jets[m+3],"Z/#gamma^{*}(ll) + jets","f");
+    leg->AddEntry(data_histos[m],"Data","lep");
+    
+    stack1->Add(dy_jets[m+3]);//DY
+    stack1->Add(TTjets[m+3]);//TTbar
+    stack1->Add(Wjets[m+3]);//Wjets
+    stack1->Add(Zjets[m+3]);//ZJets
+    
+    TH1F* aux2 = new TH1F( *Wjets[m] );
+    //aux2->Sumw2();
+    aux2->Add(TTjets[m], 1);
+    aux2->Add(Zjets[m], 1);
+    aux2->Add(dy_jets[m], 1);
+    
+    TString type("HT");
+    TString name;
+    TString lbl;
+    switch(m){
+    case 56:
+      name = "Kine/HT_BOX0_Stack";
+      lbl = "0#mu";
+      break;
+    case 57:
+      name = "Kine/HT_BOX1_Stack";
+      lbl = "1#mu";
+      break;
+    case 58:
+      name = "Kine/HT_BOX2_Stack";
+      lbl = "2#mu";
+      break;
+    default:
+      std::cout << "value of x unknown" << std::endl;
+      break;
+    }
+    
+    RatioPlotsV2(stack1, data_histos[m] , aux2, "MC "+lbl, "Data "+lbl, name, type, leg);
+    delete leg;
+    delete aux2;
+    delete stack1;
+  }
+
+  for(int m = 62; m < 65; m++){
+    stack1 = new THStack("stack1", "");
+    leg = new TLegend(0.7,0.7,0.9,0.92);
+    
+    leg->AddEntry(Wjets[m+3],"W + jets","f");
+    leg->AddEntry(Zjets[m+3],"Z(#nu#bar{#nu}) + jets","f");
+    leg->AddEntry(TTjets[m+3],"t #bar{t} + jets","f");
+    leg->AddEntry(dy_jets[m+3],"Z/#gamma^{*}(ll) + jets","f");
+    leg->AddEntry(data_histos[m],"Data","lep");
+    
+    stack1->Add(dy_jets[m+3]);//DY
+    stack1->Add(TTjets[m+3]);//TTbar
+    stack1->Add(Wjets[m+3]);//Wjets
+    stack1->Add(Zjets[m+3]);//ZJets
+    
+    TH1F* aux2 = new TH1F( *Wjets[m] );
+    //aux2->Sumw2();
+    aux2->Add(TTjets[m], 1);
+    aux2->Add(Zjets[m], 1);
+    aux2->Add(dy_jets[m], 1);
+    
+    TString type("Dphi");
+    TString name;
+    TString lbl;
+    switch(m){
+    case 62:
+      name = "Kine/Dphi_BOX0_Stack";
+      lbl = "0#mu";
+      break;
+    case 63:
+      name = "Kine/Dphi_BOX1_Stack";
+      lbl = "1#mu";
+      break;
+    case 64:
+      name = "Kine/Dphi_BOX2_Stack";
+      lbl = "2#mu";
+      break;
+    default:
+      std::cout << "value of x unknown" << std::endl;
+      break;
+    }
+    
+    RatioPlotsV2(stack1, data_histos[m] , aux2, "MC "+lbl, "Data "+lbl, name, type, leg);
+    delete leg;
+    delete aux2;
+    delete stack1;
+  }
+
 }

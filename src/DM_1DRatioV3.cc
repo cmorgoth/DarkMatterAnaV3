@@ -161,7 +161,7 @@ int RatioPlotsV2(THStack* s, TH1F* h2, TH1F* h1, TString h1Name = "h1Name", TStr
     h2->GetXaxis()->SetRangeUser(200.,3500.);
     RATIO->GetXaxis()->SetRangeUser(200.,3500.);
     RATIO->GetYaxis()->SetRangeUser(.0, 2.0);
-    s->SetMaximum(100000.);
+    s->SetMaximum(500000.);
   }else if(type == "RSQ" ){
     RATIO = new TH1F("RATIO", fname + "_" + type , BaseDM::RSQ_Bins, BaseDM::RSQ_BinArr);
     label = "R^{2}";
@@ -218,6 +218,16 @@ int RatioPlotsV2(THStack* s, TH1F* h2, TH1F* h1, TString h1Name = "h1Name", TStr
     RATIO = new TH1F("RATIO", fname + "_" + type , 20, -TMath::Pi(), TMath::Pi());
     label = "#phi_{#mu}";
     s->SetMaximum(5e4);
+  }else if(type == "HT"){
+     std::cout << "========HT=======" << std::endl;
+     RATIO = new TH1F("RATIO", fname + "_" + type , 20, 0.0, 1400.0);
+    label = "HT";
+    s->SetMaximum(5e4);
+  }else if(type == "Dphi"){
+     std::cout << "========Dphi=======" << std::endl;
+     RATIO = new TH1F("RATIO", fname + "_" + type , 20, -TMath::Pi(), TMath::Pi());
+    label = "#Delta#phi(J_{1},J_{2})";
+    s->SetMaximum(9e4);
   }else{
     delete RATIO;
     delete C;
