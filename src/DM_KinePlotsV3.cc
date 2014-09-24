@@ -13,11 +13,13 @@ void CreateKinePlots(){
   ///////////////WJETS 1D HISTOS/////////////
   ///////////////////////////////////////////
   W->SetBtagCut(bL,bM,bT);
-  W->PrintEvents();
+  //W->PrintEvents();
   
   std::vector<TH1F*> Wjets = W->PlotKine();
-  for(int i = 0; i < 54; i++)std::cout << i << " " << (Wjets[i])->Integral() << std::endl;
-
+  //for(int i = 0; i < 54; i++)std::cout << i << " " << (Wjets[i])->Integral() << std::endl;
+  std::cout << "==W==" << std::endl;
+  std::cout << "DiMU " << (Wjets[54])->Integral() << std::endl;
+  
   TLegend* leg;
   std::cout << "debug 0" << std::endl;
   /////////////////////////////////////////////
@@ -26,22 +28,24 @@ void CreateKinePlots(){
   
   ZJetsNuNu* Z = new ZJetsNuNu( 2 );
   Z->SetBtagCut(bL,bM,bT);
-  Z->PrintEvents();
-
-  std::vector<TH1F*> Zjets = Z->PlotKine();
-  for(int i = 0; i < 6; i++)std::cout << i << " " << (Zjets[i])->Integral() << std::endl;
+  //Z->PrintEvents();
   
+  std::vector<TH1F*> Zjets = Z->PlotKine();
+  //for(int i = 0; i < 6; i++)std::cout << i << " " << (Zjets[i])->Integral() << std::endl;
+  std::cout << "==Z==" << std::endl;
+  std::cout << "DiMU " << (Zjets[54])->Integral() << std::endl;
   //////////////////////////////////////////////////////
   ///////////////// Drell-Yan///////////////////////////
   /////////////////////////////////////////////////////
 
   DY* dy = new DY( 2 );
   dy->SetBtagCut(bL,bM,bT);
-  dy->PrintEvents();
+  //dy->PrintEvents();
   
   std::vector<TH1F*> dy_jets = dy->PlotKine();
-  for(int i = 0; i < 12; i++)std::cout << i << " " << (dy_jets[i])->Integral() << std::endl;
-  
+  //for(int i = 0; i < 12; i++)std::cout << i << " " << (dy_jets[i])->Integral() << std::endl;
+  std::cout << "==DY==" << std::endl;
+  std::cout << "DiMU " << (dy_jets[54])->Integral() << std::endl;
   //////////////////////////////////////////////////
   /////////////////////////////////////////////////
   /////////////////TTbar + Jets////////////////////
@@ -51,11 +55,12 @@ void CreateKinePlots(){
   
   TTJets* TT = new TTJets(2);
   TT->SetBtagCut(bL,bM,bT);
-  TT->PrintEvents();
+  //TT->PrintEvents();
 
   std::vector<TH1F*> TTjets = TT->PlotKine();
-  for(int i = 0; i < 12; i++)std::cout << i << " " << (TTjets[i])->Integral() << std::endl;  
-  
+  //for(int i = 0; i < 12; i++)std::cout << i << " " << (TTjets[i])->Integral() << std::endl;  
+  std::cout << "==TT==" << std::endl;
+  std::cout << "DiMU " << (TTjets[54])->Integral() << std::endl;
   ////////////////////////////////////////////////////////////////
   //////////////////// DATA//////////////////////////////////////
   ///////////////////////////////////////////////////////////////
@@ -64,10 +69,12 @@ void CreateKinePlots(){
   
   Data* data = new Data(data_file, 2);
   data->SetBtagCut(bL,bM,bT);
-  data->PrintEvents();
+  //data->PrintEvents();
   
   std::vector<TH1F*> data_histos = data->PlotKine();
-  for(int i = 0; i < 6; i++)std::cout << i << " " << (data_histos[i])->Integral() << std::endl;
+  //for(int i = 0; i < 6; i++)std::cout << i << " " << (data_histos[i])->Integral() << std::endl;
+  std::cout << "==Data==" << std::endl;
+  std::cout << "DiMU " << (data_histos[54])->Integral() << std::endl;
   
   TCanvas* C1 = new TCanvas("C1", "C1", 1024, 1024);
   C1->cd();

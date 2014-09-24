@@ -9,16 +9,20 @@ DY::DY(){
 DY::DY(int MetIndex ): BaseDM( MetIndex, "DY" ){
   
   T = new TChain("outTree");
-  //T->Add("/media/data/cmorgoth/Data/DMData/Pt100Data/DY_pt100_sf.root");
-  //T->Add("/media/data/cmorgoth/Data/DMData/Pt100Data/Znunu_ptZ100_sf_xsec207p1.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/DYJets/BtagCorrMC/DYJetsHT200To400_PU_MU_LooseBtag_sf_ISR.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/DYJets/BtagCorrMC/DYJetsHT400_PU_MU_LooseBtag_sf_ISR.root");
+  //T->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/DYJets/DYJetsHT200To400_JEC_FIX_May2014_NopfMuonID_Lbtag.root");
+  //T->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/DYJets/DYJetsHT400_JEC_FIX_May2014_NopfMuonID_Lbtag.root");
+  
+  //Aug2014
+  T->Add("/wntmp/cmorgoth/DYJetsHT200To400_PFNoPU_Fixed_Lbtag.root");
+  T->Add("/wntmp/cmorgoth/DYJetsHT400_PFNoPU_Fixed_Lbtag.root");
   
   effT = new TChain("effTree");
-  //effT->Add("/media/data/cmorgoth/Data/DMData/Pt100Data/DY_pt100_sf.root");
-  //effT->Add("/media/data/cmorgoth/Data/DMData/Pt100Data/Znunu_ptZ100_sf_xsec207p1.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/DYJets/BtagCorrMC/DYJetsHT200To400_PU_MU_LooseBtag_sf_ISR.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/DYJets/BtagCorrMC/DYJetsHT400_PU_MU_LooseBtag_sf_ISR.root");
+  //effT->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/DYJets/DYJetsHT200To400_JEC_FIX_May2014_NopfMuonID_Lbtag.root");
+  //effT->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/DYJets/DYJetsHT400_JEC_FIX_May2014_NopfMuonID_Lbtag.root");
+  
+  //Aug2014
+  effT->Add("/wntmp/cmorgoth/DYJetsHT200To400_PFNoPU_Fixed_Lbtag.root");
+  effT->Add("/wntmp/cmorgoth/DYJetsHT400_PFNoPU_Fixed_Lbtag.root");
   
 };
 

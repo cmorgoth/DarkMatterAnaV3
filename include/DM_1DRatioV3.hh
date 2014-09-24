@@ -14,5 +14,5 @@
 
 int RatioPlots( TH1F*, TH1F*, TString, TString, TString, TString );
 int RatioPlotsV2( THStack*, TH1F*, TH1F*, TString, TString, TString, TString, TLegend* );
-
+int RatioPlotsV3( TH1F*, TH1F*, TString, TString, TString, TString, int, double, double, TLegend* );
 #endif

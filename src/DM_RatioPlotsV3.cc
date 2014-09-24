@@ -9,13 +9,13 @@ void CreateRatioPlots(){
   TLegend* leg;
   
   int bL, bM, bT;
-  bL = bM = 0;
-  bT = 0;
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////// W + Jets //////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  bL = bM = 2;
+  bT = 2;
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////// W + Jets //////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
   WJetsHTBins* W = new WJetsHTBins( 2 );
   W->SetBtagCut(bL,bM,bT);
@@ -44,13 +44,33 @@ void CreateRatioPlots(){
   ////////
   ////////
   std::cout << "debug 4" << std::endl;
-  RatioPlots( MR_W00, MR_W11, "W + Jets (l#nu) 0 #mu BOX", "W + Jets (l#nu) 1 #mu BOX", "RatioPlots/WJetsMR_0_to_1mu", "MR");
-  RatioPlots( RSQ_W00, RSQ_W11, "W + Jets (l#nu) 0 #mu BOX", "W + Jets (l#nu) 1 #mu BOX", "RatioPlots/WJetsRSQ_0_to_1mu", "RSQ");
   
+  leg = new TLegend(0.7,0.7,0.9,0.92);
+  MR_W00->SetMarkerStyle(20);
+  MR_W00->SetMarkerSize(1.5);
+  MR_W11->SetMarkerStyle(20);
+  MR_W11->SetMarkerSize(1.5);
+  leg->AddEntry(MR_W00,"M_{R} W(l#nu) + jets 0#mu","f");
+  leg->AddEntry(MR_W11,"M_{R} W(l#nu) + jets 1#mu","f");
+  
+  RatioPlotsV3( MR_W00, MR_W11, "W(l#nu) + jets 0#mu", "W(l#nu) + jets 1#mu", "RatioPlots/WJetsMR_0_to_1mu", "MR", 20, 200, 1700.0, leg);
+  delete leg;
+  
+  leg = new TLegend(0.7,0.7,0.9,0.92);
+  RSQ_W00->SetMarkerStyle(20);
+  RSQ_W00->SetMarkerSize(1.5);
+  RSQ_W11->SetMarkerStyle(20);
+  RSQ_W11->SetMarkerSize(1.5);
+  leg->AddEntry(RSQ_W00,"R^{2} W(l#nu) + jets 0#mu","f");
+  leg->AddEntry(RSQ_W11,"R^{2} W(l#nu) + jets 1#mu","f");
+  RatioPlotsV3( RSQ_W00, RSQ_W11, "W(l#nu) + jets 0#mu", "W(l#nu) + jets 1#mu", "RatioPlots/WJetsRSQ_0_to_1mu", "RSQ", 20, 0.5, 2.0, leg);
+  
+  //return;
   std::cout << "debug 5" << std::endl;  
   ///////////////////////////////////////////////////////
   /////////////////WJETS 2D HISTOS///////////////////////
   ///////////////////////////////////////////////////////
+  /*
   std::vector<TH2F*> Wjets2D = W->Plot_2DRazor();
   
   TH2F*  MR_R2_1BOX = new TH2F( *Wjets2D[1] );
@@ -62,11 +82,12 @@ void CreateRatioPlots(){
   TH2F* wjRatio = (TH2F*)RatioPlotsTwoD( MR_RSQ_0BOX, MR_R2_1BOX, "RatioPlots/Wjets2D_0_to_1mu", "Wjets2dRatio");
   
   std::cout << "debug 8" << std::endl;	
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////// Z(NuNu) + Jets ////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  */
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////// Z(NuNu) + Jets ///////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////
   
 
   
@@ -79,32 +100,32 @@ void CreateRatioPlots(){
   std::vector<TH1F*> Zjets = Z->Plot_1DRazor();
 
   TH1F* MR_Z11 = new TH1F( *Zjets[2] );                                                                            
-  MR_Z11->Scale( 1./MR_Z11->Integral() );                                                                                 
-                                                                                                                          
+  MR_Z11->Scale( 1./MR_Z11->Integral() ); 
+                                                                             
   TH1F* MR_Z00 = new TH1F( *Zjets[0] );                                                                            
-  MR_Z00->Scale( 1./MR_Z00->Integral() );                                                                                
-                                                                                                                          
-  TH1F* RSQ_Z11 = new TH1F( *Zjets[1] );                                                                          
-  RSQ_Z11->Scale( 1./RSQ_Z11->Integral() );                                                                     
-                                                                                                                          
-  TH1F* RSQ_Z00 = new TH1F( *Zjets[3] );                                                                          
+  MR_Z00->Scale( 1./MR_Z00->Integral() );                  
+  
+  TH1F* RSQ_Z11 = new TH1F( *Zjets[3] );                                                                          
+  RSQ_Z11->Scale( 1./RSQ_Z11->Integral() );                              
+  
+  TH1F* RSQ_Z00 = new TH1F( *Zjets[1] );                                                                          
   RSQ_Z00->Scale( 1./RSQ_Z00->Integral() ); 
   
   ///////////////////////////////////////////
   //////////////////2D///////////////////////
   //////////////////////////////////////////
-  
+  /*
   TH2F*  MR_RSQ_0BOX_Z = new TH2F( Z->PlotRSQ_vs_MR_0Box() );
   MR_RSQ_0BOX_Z->Sumw2();
   
   TH2F*  MR_RSQ_1BOX_Z = new TH2F( Z->PlotRSQ_vs_MR_1Box() );
   MR_RSQ_1BOX_Z->Sumw2();
-  
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////// ZGamma(ll) + Jets /////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  */
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////// ZGamma(ll) + Jets /////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
   DY* dy = new DY(2);
   dy->SetBtagCut(bL,bM,bT);
@@ -115,27 +136,27 @@ void CreateRatioPlots(){
   std::vector<TH1F*> dy_jets = dy->Plot_1DRazor();
   
   TH1F* MR_DY22 = new TH1F( *dy_jets[4] );                                                                          
-  MR_DY22->Scale( 1./MR_DY22->Integral() );                                                                              
-                                                                                                                          
+  MR_DY22->Scale( 1./MR_DY22->Integral() );                                  
+  
   TH1F* MR_DY11 = new TH1F( *dy_jets[2] );                                                                          
-  MR_DY11->Scale( 1./MR_DY11->Integral() );                                                                               
-                                                                                                                          
+  MR_DY11->Scale( 1./MR_DY11->Integral() );                                                    
+  
   TH1F* MR_DY00 = new TH1F( *dy_jets[0] );                                                                          
-  MR_DY00->Scale( 1./MR_DY00->Integral() );                                                                               
-                                                                                                                          
+  MR_DY00->Scale( 1./MR_DY00->Integral() );     
+  
   TH1F* RSQ_DY22 = new TH1F( *dy_jets[5] );                                                                        
-  RSQ_DY22->Scale( 1./RSQ_DY22->Integral() );                                                                             
-                                                                                                                          
+  RSQ_DY22->Scale( 1./RSQ_DY22->Integral() );         
+  
   TH1F* RSQ_DY11 = new TH1F( *dy_jets[3] );                                                                        
-  RSQ_DY11->Scale( 1./RSQ_DY11->Integral() );                                                                             
-                                                                                                                          
+  RSQ_DY11->Scale( 1./RSQ_DY11->Integral() );     
+
   TH1F* RSQ_DY00 = new TH1F( *dy_jets[1] );                                                                        
   RSQ_DY00->Scale( 1./RSQ_DY00->Integral() );
   
   ///////////////////////////////////////////
   //////////////////2D///////////////////////
   //////////////////////////////////////////
-  
+  /*
   TH2F*  MR_RSQ_0BOX_DY = new TH2F( dy->PlotRSQ_vs_MR_0Box() );
   MR_RSQ_0BOX_DY->Sumw2();
   TH2F*  MR_RSQ_1BOX_DY = new TH2F( dy->PlotRSQ_vs_MR_1Box() );
@@ -146,42 +167,69 @@ void CreateRatioPlots(){
   std::cout << "DY0mu: " << MR_RSQ_0BOX_DY->Integral() << std::endl;
   std::cout << "DY1mu: " << MR_RSQ_1BOX_DY->Integral() << std::endl;
   std::cout << "DY2mu: " << MR_RSQ_2BOX_DY->Integral() << std::endl;
-  
+  */
   //////////////////////////////////////
   ///////////DY 1mu/2mu BOX////////////
   /////////////////////////////////////
   
-  RatioPlots( MR_DY11, MR_DY22, "Z/#gamma^{*}(ll) + Jets 1 #mu BOX", "Z/#gamma^{*}(ll) + Jets 2 #mu BOX", "RatioPlots/DYJets_MR_1to2box", "MR");
-  RatioPlots( RSQ_DY11, RSQ_DY22, "Z/#gamma^{*}(ll) + Jets 1 #mu BOX", "Z/#gamma^{*}(ll) + Jets 2 #mu BOX", "RatioPlots/DYJets_RSQ_1to2box", "RSQ");
+  leg = new TLegend(0.7,0.7,0.9,0.92);
+  leg->AddEntry(MR_DY11,"M_{R} Z/#gamma^{*}(ll) + jets 0#mu","f");
+  leg->AddEntry(MR_DY22,"M_{R} Z/#gamma^{*}(ll) + jets 2#mu","f");
+  RatioPlotsV3( MR_DY11, MR_DY22, "Z/#gamma^{*}(ll) + jets 1#mu", "Z/#gamma^{*}(ll) + jets 2 #mu", "RatioPlots/DYJets_MR_1to2box", "MR", 20, 200.0, 1700.0, leg);
   
-  TH2F* DY_1to2 = (TH2F*)RatioPlotsTwoD( MR_RSQ_1BOX_DY, MR_RSQ_2BOX_DY, "RatioPlots/DY2dRatio_1to2box", "DY2dRatio_1to2box");
+  delete leg;
+  leg = new TLegend(0.7,0.7,0.9,0.92);
+  leg->AddEntry(RSQ_DY11,"R^{2} Z/#gamma^{*}(ll) + jets 0#mu","f");
+  leg->AddEntry(RSQ_DY22,"R^{2} Z/#gamma^{*}(ll) + jets 2#mu","f");
+  RatioPlotsV3( RSQ_DY11, RSQ_DY22, "Z/#gamma^{*}(ll) + jets 1#mu", "Z/#gamma^{*}(ll) + Jets 2#mu", "RatioPlots/DYJets_RSQ_1to2box", "RSQ", 20, 0.5, 2.0, leg);
+  
+  //TH2F* DY_1to2 = (TH2F*)RatioPlotsTwoD( MR_RSQ_1BOX_DY, MR_RSQ_2BOX_DY, "RatioPlots/DY2dRatio_1to2box", "DY2dRatio_1to2box");
   
   //////////////////////////////////////
   ///////////DY 0mu/2mu BOX////////////
   /////////////////////////////////////
   
-  RatioPlots( MR_DY00, MR_DY22, "Z/#gamma^{*}(ll) + Jets 0 #mu BOX", "Z/#gamma^{*}(ll) + Jets 2 #mu BOX", "RatioPlots/DYJets_MR_0to2box", "MR");
-  RatioPlots( RSQ_DY00, RSQ_DY22, "Z/#gamma^{*}(ll) + Jets 0 #mu BOX", "Z/#gamma^{*}(ll) + Jets 2 #mu BOX", "RatioPlots/DYJets_RSQ_0to2box", "RSQ");
+  RatioPlotsV3( MR_DY00, MR_DY22, "Z/#gamma^{*}(ll) + Jets 0#mu", "Z/#gamma^{*}(ll) + jets 2#mu", "RatioPlots/DYJets_MR_0to2box", "MR", 20, 200.0, 1700.0, leg);
+  RatioPlotsV3( RSQ_DY00, RSQ_DY22, "Z/#gamma^{*}(ll) + Jets 0#mu", "Z/#gamma^{*}(ll) + jets 2#mu", "RatioPlots/DYJets_RSQ_0to2box", "RSQ", 20, 0.5, 2.0, leg);
   
-  TH2F* DY_0to2 = (TH2F*)RatioPlotsTwoD( MR_RSQ_0BOX_DY, MR_RSQ_2BOX_DY, "RatioPlots/DY2dRatio_0to2box", "DY2dRatio_0to2box");
+  //TH2F* DY_0to2 = (TH2F*)RatioPlotsTwoD( MR_RSQ_0BOX_DY, MR_RSQ_2BOX_DY, "RatioPlots/DY2dRatio_0to2box", "DY2dRatio_0to2box");
   
   //////////////////////////////////////
   ///////////DY-Znunu 0mu/2mu BOX///////
   /////////////////////////////////////
   
-  RatioPlots( MR_Z00, MR_DY22, "Z(#nu #bar{#nu}) + Jets 0 #mu BOX", "Z/#gamma^{*}(ll) + Jets 2 #mu BOX", "RatioPlots/Znunu_DYJets_MR_0to2box", "MR");
-  RatioPlots( RSQ_Z00, RSQ_DY22, "Z(#nu #bar{#nu}) + Jets 0 #mu BOX", "Z/#gamma^{*}(ll) + Jets 2 #mu BOX", "RatioPlots/Znunu_DYJets_RSQ_0to2box", "RSQ");
+  RatioPlotsV3( MR_Z00, MR_DY22, "Z(#nu #bar{#nu}) + jets 0 #mu", "Z/#gamma^{*}(ll) + jets 2#mu", "RatioPlots/Znunu_DYJets_MR_0to2box", "MR", 20, 200.0, 1700, leg);
+  RatioPlotsV3( RSQ_Z00, RSQ_DY22, "Z(#nu #bar{#nu}) + jets 0#mu", "Z/#gamma^{*}(ll) + jets 2#mu", "RatioPlots/Znunu_DYJets_RSQ_0to2box", "RSQ", 20, 0.5, 2.0, leg);
   
-  TH2F* Z_DY_0to2 = (TH2F*)RatioPlotsTwoD( MR_RSQ_0BOX_Z, MR_RSQ_2BOX_DY, "RatioPlots/Znunu_DYJets_2dRatio_1to2box", "Znunu_DYJets_2dRatio_0to2box");
+  //TH2F* Z_DY_0to2 = (TH2F*)RatioPlotsTwoD( MR_RSQ_0BOX_Z, MR_RSQ_2BOX_DY, "RatioPlots/Znunu_DYJets_2dRatio_1to2box", "Znunu_DYJets_2dRatio_0to2box");
   
-  std::cout << "DY 0mu/2mu --> " << DY_0to2->Integral() << std::endl;
-  std::cout << "Z DY 0mu/2mu --> " << Z_DY_0to2->Integral() << std::endl;
+  //std::cout << "DY 0mu/2mu --> " << DY_0to2->Integral() << std::endl;
+  //std::cout << "Z DY 0mu/2mu --> " << Z_DY_0to2->Integral() << std::endl;
   
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////// TTbar + Jets //////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //////////////////
+  ///Z0mu/W1mu//////
+  /////////////////
+
+  RatioPlotsV3( MR_Z00, MR_W11, "Z(#nu #bar{#nu}) + Jets 0#mu", "W(l#nu) + jets 1#mu", "RatioPlots/MR_Z0toW1box", "MR", 20, 200.0, 1700.0, leg);
+  RatioPlotsV3( RSQ_Z00, RSQ_W11, "Z(#nu #bar{#nu}) + Jets 0#mu", "W(l#nu) + jets 1#mu", "RatioPlots/RSQ_Z0toW1box", "RSQ", 20, 0.5, 2.0, leg);
+
+  //////////////////////////////////////                                                         
+  ///////////W1mu/DY2mu BOX///////                                                                       
+  /////////////////////////////////////                                                                                   
+  RatioPlotsV3( MR_W11, MR_DY22, "W(l#nu) + jets 1#mu", "Z/#gamma^{*}(ll) + jets 2#mu", "RatioPlots/MR_W1toDY2box", "MR", 20, 200.0, 1700, leg);
+  RatioPlotsV3( RSQ_W11, RSQ_DY22, "W(l#nu) + jets 1#mu", "Z/#gamma^{*}(ll) + jets 2#mu", "RatioPlots/RSQ_W0toDY2box", "RSQ", 20, 0.5, 2.0, leg);
+
+
+
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////// TTbar + Jets //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  return;
 
   TTJets* TT = new TTJets(2);
   TT->SetBtagCut(bL,bM,bT);
@@ -192,20 +240,20 @@ void CreateRatioPlots(){
   std::vector<TH1F*> TTjets = TT->Plot_1DRazor();
   
   TH1F* MR_22_TT = new TH1F( *TTjets[4] );                                                                         
-  MR_22_TT->Scale( 1./MR_22_TT->Integral() );                                                                             
-                                                                                                                          
+  MR_22_TT->Scale( 1./MR_22_TT->Integral() );        
+  
   TH1F* MR_11_TT = new TH1F( *TTjets[2] );                                                                         
-  MR_11_TT->Scale( 1./MR_11_TT->Integral() );                                                                             
-                                                                                                                          
+  MR_11_TT->Scale( 1./MR_11_TT->Integral() );                                                                  
+  
   TH1F* MR_00_TT = new TH1F( *TTjets[0] );                                                                         
-  MR_00_TT->Scale( 1./MR_00_TT->Integral() );                                                                             
-                                                                                                                          
+  MR_00_TT->Scale( 1./MR_00_TT->Integral() );                     
+  
   TH1F* RSQ_22_TT = new TH1F( *TTjets[5] );                                                                       
-  RSQ_22_TT->Scale( 1./RSQ_22_TT->Integral() );                                                                           
-                                                                                                                          
+  RSQ_22_TT->Scale( 1./RSQ_22_TT->Integral() );      
+  
   TH1F* RSQ_11_TT = new TH1F( *TTjets[3] );                                                                       
-  RSQ_11_TT->Scale( 1./RSQ_11_TT->Integral() );                                                                           
-                                                                                                                          
+  RSQ_11_TT->Scale( 1./RSQ_11_TT->Integral() );             
+  
   TH1F* RSQ_00_TT = new TH1F( *TTjets[1] );                                                                       
   RSQ_00_TT->Scale( 1./RSQ_00_TT->Integral() );
   
@@ -213,14 +261,14 @@ void CreateRatioPlots(){
   ////////////////////////////////////////
   //////////////////2D TT+jets////////////
   ////////////////////////////////////////
-  
+  /*
   TH2F*  MR_RSQ_1BOX_TT = new TH2F( TT->PlotRSQ_vs_MR_1Box( ) );
   MR_RSQ_1BOX_TT->Sumw2();
   TH2F*  MR_RSQ_2BOX_TT = new TH2F( TT->PlotRSQ_vs_MR_2Box( ) );
   MR_RSQ_2BOX_TT->Sumw2();
   TH2F*  MR_RSQ_0BOX_TT = new TH2F( TT->PlotRSQ_vs_MR_0Box( ) ); 
   MR_RSQ_0BOX_TT->Sumw2();
-  
+  */
   ////////////////////////////////////////////////////////////////
   //////////////////// DATA//////////////////////////////////////
   ///////////////////////////////////////////////////////////////
@@ -233,9 +281,11 @@ void CreateRatioPlots(){
   Data* data = new Data(data_file, 2);
   data->SetBtagCut(bL,bM,bT);
   
+  /*
   TH1F* MR_22_data = new TH1F( data->PlotMR_2Box() );
   MR_22_data->Sumw2();
   MR_22_data->Scale ( 1./MR_22_data->Integral() );
+  */
   
   TH1F* MR_11_data = new TH1F( data->PlotMR_1Box() );
   MR_11_data->Sumw2();
@@ -245,10 +295,11 @@ void CreateRatioPlots(){
   MR_00_data->Sumw2();
   MR_00_data->Scale ( 1./MR_00_data->Integral() );
   
+  /*
   TH1F* RSQ_22_data = new TH1F( data->PlotRSQ_2Box() );
   RSQ_22_data->Sumw2();
   RSQ_22_data->Scale ( 1./RSQ_22_data->Integral() );  
-  
+  */
   TH1F* RSQ_11_data = new TH1F( data->PlotRSQ_1Box() );
   RSQ_11_data->Sumw2();
   RSQ_11_data->Scale ( 1./RSQ_11_data->Integral() );  
@@ -260,13 +311,13 @@ void CreateRatioPlots(){
   ///////////////////////////////////////////
   //////////////////2D///////////////////////
   //////////////////////////////////////////
-  
+  /*
   TH2F*  data0 = new TH2F( data->PlotRSQ_vs_MR_0Box( ) );
     
   TH2F*  data1 = new TH2F( data->PlotRSQ_vs_MR_1Box( ) );
     
   TH2F*  data2 = new TH2F( data->PlotRSQ_vs_MR_2Box( ) );
-  
+  */
   std::cout << "========= debug 1 =======" << std::endl;
 
   ///////////////////////////////////////////////////////////////////
@@ -275,7 +326,7 @@ void CreateRatioPlots(){
   //////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-
+  /*
   TH2F* data_0mu = new TH2F(*data0);
   TH2F* data_1mu = new TH2F(*data1);
   TH2F* data_2mu = new TH2F(*data2);
@@ -505,10 +556,10 @@ void CreateRatioPlots(){
   z_1mu->Write("z_1mu");
   
   f2->Close();
- 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////// FINALIZING //////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  */
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////// FINALIZING //////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
   delete C0;
   delete W;

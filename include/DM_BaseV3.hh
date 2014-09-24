@@ -1,15 +1,21 @@
 #ifndef DM_BaseV3_HH
 #define DM_BaseV3_HH 1
 
+#include <iostream>
+#include <map>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <math.h>
+#include <iomanip>
+
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TTree.h"
 #include "TChain.h"
+#include "TString.h"
 #include "TFile.h"
 #include "TEfficiency.h"
-#include <vector>
-#include <math.h>
-
 
 class BaseDM{
   
@@ -24,13 +30,16 @@ public:
   static const int RSQ_Bins = 4;
   
   //static const float Lumi = 19.6;//fb^{-1}
-  static const float Lumi = 19.364;
+  static const float Lumi = 18.836;
   
-  static const int btagIndex = 0;//0->Veto Btag(Loose), 1-> Btag(Loose) >=1, 2-> BtagTight >=1
+  //Choose btagIndex Accordingly
+  //0->Veto Btag(Loose), 1-> Btag(Loose) >=Cut0, 2-> BtagMed >= cut1, 3->BtagTight == cut2,4->BtagTight >= cut2
+  static const int btagIndex = 0;
   
   static const float RSQ_BinArr[RSQ_Bins+1];
   static const float MR_BinArr[MR_Bins+1];
-  
+  //float RSQ_BinArr[] = {0.5, 0.6, 0.725, 0.85, 2.50};
+  //float MR_BinArr[] = {200., 300., 400., 600., 3500.};
   
   BaseDM();
   BaseDM(int , TString);
@@ -65,6 +74,7 @@ public:
   virtual bool SetBtagCut(int a, int b, int c){nBtagCut[0]=a; nBtagCut[1]=b; nBtagCut[2]=c;};
   virtual double HLTscale(double, double);
   virtual double HLTscaleEle(double, double);
+  virtual double GetTriggerEff(double , TString);
 
 private:
   
@@ -75,6 +85,9 @@ private:
   TH2F* hlt_ele;
   TEfficiency* eff;
   TEfficiency* eff_ele;
+  
+  TH1F* to_0mu;
+  TH1F* to_12mu;
   
   //int metIndex;
   //float MRMin;

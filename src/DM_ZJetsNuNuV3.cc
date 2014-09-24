@@ -9,20 +9,29 @@ ZJetsNuNu::ZJetsNuNu(){
 ZJetsNuNu::ZJetsNuNu(int MetIndex ): BaseDM( MetIndex, "Z" ){
   
   T = new TChain("outTree");
-  //T->Add("/media/data/cmorgoth/Data/DMData/Pt100Data/Znunu_ptZ100_sf.root");
-  //T->Add("/media/data/cmorgoth/Data/DMData/Pt100Data/Znunu_ptZ100_sf_xsec207p1.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/ZJets/BtagCorrMC/ZJetsToNuNu_50_HT_100_pu_mu_LooseBtag_sf_ISR.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/ZJets/BtagCorrMC/ZJetsToNuNu_100_HT_200_pu_mu_LooseBtag_sf_ISR.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/ZJets/BtagCorrMC/ZJetsToNuNu_200_HT_400_pu_mu_LooseBtag_sf_ISR.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/ZJets/BtagCorrMC/ZJetsToNuNu_400_HT_inf_pu_mu_LooseBtag_sf_ISR.root");
+  //T->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/ZJets/ZJetsToNuNu_50_HT_100_May2014_NopfMuonID_Lbtag.root");
+  //T->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/ZJets/ZJetsToNuNu_100_HT_200_May2014_NopfMuonID_Lbtag.root");
+  //T->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/ZJets/ZJetsToNuNu_200_HT_400_May2014_NopfMuonID_Lbtag.root");
+  //T->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/ZJets/ZJetsToNuNu_400_HT_Inf_May2014_NopfMuonID_Lbtag.root");
   
+  //Aug2014
+  T->Add("/wntmp/cmorgoth/ZJetsToNuNu_50_HT_100_PFNoPU_Fixed_Lbtag.root");
+  T->Add("/wntmp/cmorgoth/ZJetsToNuNu_100_HT_200_PFNoPU_Fixed_Lbtag.root");
+  T->Add("/wntmp/cmorgoth/ZJetsToNuNu_200_HT_400_PFNoPU_Fixed_Lbtag.root");
+  T->Add("/wntmp/cmorgoth/ZJetsToNuNu_400_HT_Inf_PFNoPU_Fixed_Lbtag.root");
+
   effT = new TChain("effTree");
-  //effT->Add("/media/data/cmorgoth/Data/DMData/Pt100Data/Znunu_ptZ100_sf.root");
-  //effT->Add("/media/data/cmorgoth/Data/DMData/Pt100Data/Znunu_ptZ100_sf_xsec207p1.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/ZJets/BtagCorrMC/ZJetsToNuNu_50_HT_100_pu_mu_LooseBtag_sf_ISR.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/ZJets/BtagCorrMC/ZJetsToNuNu_100_HT_200_pu_mu_LooseBtag_sf_ISR.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/ZJets/BtagCorrMC/ZJetsToNuNu_200_HT_400_pu_mu_LooseBtag_sf_ISR.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/ZJets/BtagCorrMC/ZJetsToNuNu_400_HT_inf_pu_mu_LooseBtag_sf_ISR.root");
+  //effT->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/ZJets/ZJetsToNuNu_50_HT_100_May2014_NopfMuonID_Lbtag.root");
+  //effT->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/ZJets/ZJetsToNuNu_100_HT_200_May2014_NopfMuonID_Lbtag.root");
+  //effT->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/ZJets/ZJetsToNuNu_200_HT_400_May2014_NopfMuonID_Lbtag.root");
+  //effT->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/ZJets/ZJetsToNuNu_400_HT_Inf_May2014_NopfMuonID_Lbtag.root");
+
+  //Aug2014                                                                     
+  effT->Add("/wntmp/cmorgoth/ZJetsToNuNu_50_HT_100_PFNoPU_Fixed_Lbtag.root");
+  effT->Add("/wntmp/cmorgoth/ZJetsToNuNu_100_HT_200_PFNoPU_Fixed_Lbtag.root");
+  effT->Add("/wntmp/cmorgoth/ZJetsToNuNu_200_HT_400_PFNoPU_Fixed_Lbtag.root");
+  effT->Add("/wntmp/cmorgoth/ZJetsToNuNu_400_HT_Inf_PFNoPU_Fixed_Lbtag.root");
+  
 };
 
 ZJetsNuNu::~ZJetsNuNu(){

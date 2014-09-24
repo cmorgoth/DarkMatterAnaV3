@@ -4,8 +4,8 @@
 void CreateStackPlots(){
   
   int bL, bM, bT;
-  bL = bM = 0;
-  bT = 0;
+  bL = bM = 2;
+  bT = 2;
 
   std::cout << "bTag Loose: " << bL << " bTag Med: " << bM << " bTag Tight: " << bT << std::endl;
 
@@ -14,7 +14,7 @@ void CreateStackPlots(){
   ///////////////WJETS 1D HISTOS/////////////
   ///////////////////////////////////////////
   W->SetBtagCut(bL,bM,bT);
-  W->PrintEvents();
+  //W->PrintEvents();
   
   //TH1F* W_MR0 = new TH1F( W->PlotMR_0Box() );
   //TH1F* W_R20 =new TH1F( W->PlotRSQ_0Box() );
@@ -60,7 +60,7 @@ void CreateStackPlots(){
   
   ZJetsNuNu* Z = new ZJetsNuNu( 2 );
   Z->SetBtagCut(bL,bM,bT);
-  Z->PrintEvents();
+  //Z->PrintEvents();
 
   std::vector<TH1F*> Zjets = Z->Plot_1DRazor();
   for(int i = 0; i < 6; i++)std::cout << i << " " << (Zjets[i])->Integral() << std::endl;
@@ -91,7 +91,7 @@ void CreateStackPlots(){
 
   DY* dy = new DY( 2 );
   dy->SetBtagCut(bL,bM,bT);
-  dy->PrintEvents();
+  //dy->PrintEvents();
   
   std::vector<TH1F*> dy_jets = dy->Plot_1DRazor();
   for(int i = 0; i < 12; i++)std::cout << i << " " << (dy_jets[i])->Integral() << std::endl;
@@ -136,7 +136,7 @@ void CreateStackPlots(){
   
   TTJets* TT = new TTJets(2);
   TT->SetBtagCut(bL,bM,bT);
-  TT->PrintEvents();
+  //TT->PrintEvents();
 
   std::vector<TH1F*> TTjets = TT->Plot_1DRazor();
   for(int i = 0; i < 12; i++)std::cout << i << " " << (TTjets[i])->Integral() << std::endl;  
@@ -183,7 +183,7 @@ void CreateStackPlots(){
   
   Data* data = new Data(data_file, 2);
   data->SetBtagCut(bL,bM,bT);
-  data->PrintEvents();
+  //data->PrintEvents();
   
   std::vector<TH1F*> data_histos = data->Plot_1DRazor();
   for(int i = 0; i < 6; i++)std::cout << i << " " << (data_histos[i])->Integral() << std::endl;
@@ -347,9 +347,9 @@ void CreateStackPlots(){
   Z_R20->SetFillColor(kYellow-4);
   W_R20->SetFillColor(kSpring+4);
 
-  leg = new TLegend(0.7,0.7,0.9,0.92);
+  leg = new TLegend(0.7,0.7,0.89,0.89);
   
-  leg->AddEntry(W_R20,"W + jets","f");
+  leg->AddEntry(W_R20,"W(l#nu) + jets","f");
   leg->AddEntry(Z_R20,"Z(#nu#bar{#nu}) + jets","f");
   leg->AddEntry(TT_R20,"t #bar{t} + jets","f");
   leg->AddEntry(dy_R20,"Z/#gamma^{*}(ll) + jets","f");
@@ -433,7 +433,7 @@ void CreateStackPlots(){
   Z_MR0->SetFillColor(kSpring+4);
   
   
-  leg = new TLegend(0.70,0.7,0.9,0.90);
+  leg = new TLegend(0.70,0.7,0.89,0.89);
   
   leg->AddEntry(W_MR0,"W + jets","f");
   leg->AddEntry(Z_MR0,"Z(#nu#nu) + jets","f");
@@ -498,7 +498,7 @@ void CreateStackPlots(){
   W_R21->SetFillColor(kYellow-4);
   Z_R21->SetFillColor(kSpring+4);
 
-  leg = new TLegend(0.7,0.7,0.9,0.92);
+  leg = new TLegend(0.7,0.7,0.89,0.89);
   
   leg->AddEntry(W_R21,"W + jets","f");
   leg->AddEntry(dy_R21,"Z/#gamma^{*}(ll) + jets","f");
@@ -559,7 +559,7 @@ void CreateStackPlots(){
   W_MR1->SetFillColor(kYellow-4);
   Z_MR1->SetFillColor(kSpring+4);
 
-  leg = new TLegend(0.7,0.7,0.9,0.90);
+  leg = new TLegend(0.7,0.7,0.89,0.89);
   
   leg->AddEntry(W_MR1,"W + jets","f");
   leg->AddEntry(dy_MR1,"Z/#gamma^{*}(ll) + jets","f");
@@ -622,7 +622,7 @@ void CreateStackPlots(){
   TT_R22->SetFillColor(kPink+9);
   dy_R22->SetFillColor(kViolet+9);
   
-  leg = new TLegend(0.7,0.7,0.9,0.92);
+  leg = new TLegend(0.7,0.7,0.89,0.89);
   
   leg->AddEntry(TT_R22,"t #bar{t} + jets","f");
   leg->AddEntry(dy_R22,"Z/#gamma^{*}(ll) + jets","f");
@@ -687,7 +687,7 @@ void CreateStackPlots(){
   //MR_1->SetFillColor(6);
   //MR_11->SetFillColor(kRed);
 
-  leg = new TLegend(0.7,0.7,0.9,0.9);
+  leg = new TLegend(0.7,0.7,0.89,0.89);
   
   leg->AddEntry(TT_MR2,"t #bar{t} + jets","f");
   leg->AddEntry(dy_MR2,"Z/#gamma^{*}(ll) + jets","f");
@@ -727,7 +727,7 @@ void CreateStackPlots(){
   ///////////////////////  Finishing  ////////////////////////////////
   ////////////////////////////////////////////////////////////////////
   
-  TFile* f2 = new TFile("stack1_TightBtag.root","RECREATE");
+  TFile* f2 = new TFile("stack1_TwoBtag_Tight.root","RECREATE");
   
   stack1->Write();
   stackMR_0Box->Write();
@@ -737,10 +737,11 @@ void CreateStackPlots(){
   stackRSQ_2Box->Write();
   stackMR_2Box->Write();
   for(int i = 0; i < 6; i++){
-    (Wjets[i])->Write();
-    (dy_jets[i])->Write();
-    (Zjets[i])->Write();
-    (TTjets[i])->Write();
+    TString type = TString(Form("_type%d", i+1));
+    (Wjets[i])->Write("w"+type);
+    (dy_jets[i])->Write("dy"+type);
+    (Zjets[i])->Write("z"+type);
+    (TTjets[i])->Write("tt"+type);
     
   }
 

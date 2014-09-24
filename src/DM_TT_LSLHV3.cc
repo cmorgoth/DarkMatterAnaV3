@@ -9,20 +9,24 @@ TTJets::TTJets(){
 TTJets::TTJets(int MetIndex ): BaseDM( MetIndex, "TT" ){
   
   T = new TChain("outTree");
-  T->Add("/media/data/cmorgoth/Data/DMData/TTJets/BtagCorrMC/TTJetsFullyLept_pu_mu_LooseAndTightBtag_sf_ISR.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/TTJets/BtagCorrMC/TTJetsSemiLept_pu_mu_LooseAndTightBtag_sf_ISR.root");
-  T->Add("/media/data/cmorgoth/Data/DMData/TTJets/BtagCorrMC/TTJetsHad_pu_mu_LooseAndTightBtag_sf_ISR.root");
-  //T->Add("/media/data2/Documents/cmorgoth/Data/TTbarBtagCorrected/TightCorrectedFinalNtuples/TTJetsFullyLept_pu_mu_sf_ISR_TightCorr.root");
-  //T->Add("/media/data2/Documents/cmorgoth/Data/TTbarBtagCorrected/TightCorrectedFinalNtuples/TTJetsSemiLept_pu_mu_sf_ISR_TightCorr.root");
-  //T->Add("/media/data2/Documents/cmorgoth/Data/TTbarBtagCorrected/TightCorrectedFinalNtuples/TTJetsHad_pu_mu_sf_ISR_TightCorr.root");
+  //T->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/TTJets/TTJetsFullyLept_May2014_NopfMuonID_TLbtag.root");
+  //T->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/TTJets/TTJetsSemLept_May2014_NopfMuonID_TLbtag.root");
+  //T->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/TTJets/TTJetsHam_May2014_NopfMuonID_TLbtag.root");
+  
+  //Aug2014
+  T->Add("/wntmp/cmorgoth/TTJetsFullyLept_PFNoPU_Fixed_Lbtag.root");
+  T->Add("/wntmp/cmorgoth/TTJetsSemiLept_PFNoPU_Fixed_Lbtag.root");
+  T->Add("/wntmp/cmorgoth/TTJetsHad_PFNoPU_Fixed_Lbtag.root");
 
   effT = new TChain("effTree");
-  effT->Add("/media/data/cmorgoth/Data/DMData/TTJets/BtagCorrMC/TTJetsFullyLept_pu_mu_LooseAndTightBtag_sf_ISR.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/TTJets/BtagCorrMC/TTJetsSemiLept_pu_mu_LooseAndTightBtag_sf_ISR.root");
-  effT->Add("/media/data/cmorgoth/Data/DMData/TTJets/BtagCorrMC/TTJetsHad_pu_mu_LooseAndTightBtag_sf_ISR.root");
-  //effT->Add("/media/data2/Documents/cmorgoth/Data/TTbarBtagCorrected/TightCorrectedFinalNtuples/TTJetsFullyLept_pu_mu_sf_ISR_TightCorr.root");
-  //effT->Add("/media/data2/Documents/cmorgoth/Data/TTbarBtagCorrected/TightCorrectedFinalNtuples/TTJetsSemiLept_pu_mu_sf_ISR_TightCorr.root");
-  //effT->Add("/media/data2/Documents/cmorgoth/Data/TTbarBtagCorrected/TightCorrectedFinalNtuples/TTJetsHad_pu_mu_sf_ISR_TightCorr.root");
+  //effT->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/TTJets/TTJetsFullyLept_May2014_NopfMuonID_TLbtag.root");
+  //effT->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/TTJets/TTJetsSemLept_May2014_NopfMuonID_TLbtag.root");
+  //effT->Add("/mnt/hadoop/store/user/cmorgoth/FINALFINAL_8TeV_SM_MC_MAY2014/TTJets/TTJetsHam_May2014_NopfMuonID_TLbtag.root");
+  
+  //Aug2014                                                                             
+  effT->Add("/wntmp/cmorgoth/TTJetsFullyLept_PFNoPU_Fixed_Lbtag.root");
+  effT->Add("/wntmp/cmorgoth/TTJetsSemiLept_PFNoPU_Fixed_Lbtag.root");
+  effT->Add("/wntmp/cmorgoth/TTJetsHad_PFNoPU_Fixed_Lbtag.root");
   
 };
 
